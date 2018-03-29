@@ -58,15 +58,15 @@ namespace GitHelper
                 return;
             }
 
-            if (KeywordsDictionary.ContainsKey(keyword))
-            {
-                MessageType = KeywordsDictionary[keyword];
-                return;
-            }
-
             if (KeywordsDictionary.ContainsKey(keyword + "-" + keywordSecondPart))
             {
                 MessageType = KeywordsDictionary[keyword + "-" + keywordSecondPart];
+                return;
+            }
+
+            if (KeywordsDictionary.ContainsKey(keyword))
+            {
+                MessageType = KeywordsDictionary[keyword];
                 return;
             }
 

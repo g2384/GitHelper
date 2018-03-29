@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using LibGit2Sharp;
 using Newtonsoft.Json;
+using NLog;
 
 namespace GitHelper
 {
@@ -17,11 +18,12 @@ namespace GitHelper
     public partial class MainWindow : Window
     {
         private const string GitBranchvv = "git branch -vv";
-        public const string LogFile = "log.txt";
         public const string ConfigFile = "config.json";
         public const string CommitOutputFile = "commits.txt";
         public List<BranchInfo> Branches { get; set; }
         public Configuration Config { get; set; }
+
+        private static Logger _log = LogManager.GetCurrentClassLogger();
 
         public MainWindow()
         {
@@ -35,6 +37,7 @@ namespace GitHelper
                 catch
                 { }
             }
+
             InitializeComponent();
 
             RepoTextBox.Text = Config.RepoPath;
@@ -48,8 +51,14 @@ namespace GitHelper
         {
             var output = RunCommand(Config.RepoPath, GitBranchvv);
             var lines = output.Split('\n').ToList();
+            var startIndex = lines.FindIndex(l => l.Contains(GitBranchvv));
+            if (startIndex >= 0)
+            {
+                lines.RemoveRange(0, startIndex + 1);
+            }
+            lines.RemoveRange(lines.Count - 2, 2);
             var hashStartIndex = new int[lines.Count];
-            var hashRegex = new Regex(@" [a-zA-Z0-9]{9} \[origin/");
+            var hashRegex = new Regex(@" [a-zA-Z0-9]+ \[origin/");
             var gitCmdStartLine = -1;
             var gitCmdEndLine = -1;
             for (var i = 0; i < lines.Count; i++)
@@ -75,11 +84,17 @@ namespace GitHelper
             {
                 gitCmdEndLine = lines.Count - 1;
             }
+            if (gitCmdStartLine < 0)
+            {
+                _log.Info($"did not find local branches with command {GitBranchvv}");
+                return;
+            }
 
             var hashStartIndexList = hashStartIndex.ToList();
-            hashStartIndexList.RemoveRange(gitCmdEndLine + 1, hashStartIndexList.Count - (gitCmdEndLine + 1));
+            var removeLineCount = hashStartIndexList.Count - (gitCmdEndLine + 1);
+            hashStartIndexList.RemoveRange(gitCmdEndLine + 1, removeLineCount);
             hashStartIndexList.RemoveRange(0, gitCmdStartLine);
-            lines.RemoveRange(gitCmdEndLine + 1, lines.Count - (gitCmdEndLine + 1));
+            lines.RemoveRange(gitCmdEndLine + 1, removeLineCount);
             lines.RemoveRange(0, gitCmdStartLine);
             var goneBranches = lines.Where(l => l.IndexOf(": gone] ", StringComparison.Ordinal) >= 0).ToList();
             if (goneBranches.Count == 0)
@@ -188,8 +203,7 @@ namespace GitHelper
             catch (Exception e)
             {
                 MessageBox.Show(e.Message, "Error", MessageBoxButton.OK);
-                File.AppendAllText(LogFile, e.Message + Environment.NewLine);
-                File.AppendAllText(LogFile, e.StackTrace + Environment.NewLine);
+                _log.Error(e, "Exception");
             }
         }
 
@@ -203,7 +217,7 @@ namespace GitHelper
 
         private void SaveSettings()
         {
-            File.WriteAllText(ConfigFile, JsonConvert.SerializeObject(Config));
+            File.WriteAllText(ConfigFile, JsonConvert.SerializeObject(Config, Formatting.Indented));
         }
 
         private void DeleteButton_OnClick(object sender, RoutedEventArgs e)

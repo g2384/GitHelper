@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:GitHelper"
         mc:Ignorable="d"
         SizeToContent="Width"
-        Title="Git Helper" Height="450" MinWidth="900">
+        Title="Git Helper" Height="450" MinWidth="900"
+        Icon="icon.ico">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
