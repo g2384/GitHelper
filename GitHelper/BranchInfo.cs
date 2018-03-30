@@ -32,6 +32,11 @@ namespace GitHelper
             }
         }
 
+        public BranchInfo(string name)
+        {
+            Name = name;
+        }
+
         public static string GetDateDifference(DateTimeOffset time)
         {
             var diff = DateTime.Now - time;

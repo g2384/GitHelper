@@ -57,7 +57,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationIcon>Images\icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommonServiceLocator, Version=2.0.3.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
@@ -113,11 +113,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ActionFeatures.cs" />
+    <Compile Include="ActionInfo.cs" />
+    <Compile Include="Attributes\GitHelperActionAttribute.cs" />
+    <Compile Include="Base\ActionViewModelBase.cs" />
+    <Compile Include="Base\GitHelperActionBase.cs" />
+    <Compile Include="Helpers\BoolToVisibilityConverter.cs" />
     <Compile Include="Helpers\GridViewSort.cs" />
+    <Compile Include="Helpers\RichTextBoxHelper.cs" />
+    <Compile Include="Interfaces\IGitHelperActionMeta.cs" />
+    <Compile Include="Plugins\ExportCommitMessagesMeta.cs" />
+    <Compile Include="Plugins\ManageBranchesMeta.cs" />
+    <Compile Include="Plugins\ManageBranchesViewModel.cs" />
+    <Compile Include="Plugins\ManageBranches.xaml.cs">
+      <DependentUpon>ManageBranches.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Utility.cs" />
-    <Compile Include="ViewModel\ExportCommitMessageViewModel.cs" />
-    <Compile Include="ViewModel\MainWindowViewModel.cs" />
-    <Page Include="ExportCommitMessages.xaml">
+    <Compile Include="Plugins\ExportCommitMessageViewModel.cs" />
+    <Compile Include="MainWindowViewModel.cs" />
+    <Page Include="Plugins\ExportCommitMessages.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -133,13 +148,17 @@
     <Compile Include="CommitExportFormat.cs" />
     <Compile Include="CommitMessageType.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="ExportCommitMessages.xaml.cs">
+    <Compile Include="Plugins\ExportCommitMessages.xaml.cs">
       <DependentUpon>ExportCommitMessages.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Plugins\ManageBranches.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Styles\Styles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -167,7 +186,14 @@
     <None Include="FodyWeavers.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="icon.ico" />
+    <Resource Include="Images\icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\NewWindow.png" />
+    <Resource Include="Images\Help.png" />
+    <Resource Include="Images\Plugin.png" />
+    <Resource Include="Images\Settings.png" />
+    <Resource Include="Images\Script.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

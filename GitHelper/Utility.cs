@@ -4,7 +4,7 @@ namespace GitHelper
 {
     public static class Utility
     {
-        public static bool IsNullOrEmpty(List<CommitExportFormat> formats)
+        public static bool IsNullOrEmpty<T>(List<T> formats)
         {
             return formats == null || formats.Count == 0;
         }

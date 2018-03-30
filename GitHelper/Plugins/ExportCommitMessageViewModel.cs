@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GitHelper.Base;
 using LibGit2Sharp;
 using System;
 using System.Collections.Generic;
@@ -9,12 +10,12 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 
-namespace GitHelper.ViewModel
+namespace GitHelper.Plugins
 {
-    public class ExportCommitMessageViewModel : ViewModelBase
+    public class ExportCommitMessageViewModel : ActionViewModelBase
     {
+        public const string CommitOutputFile = "commits.txt";
         public Configuration Config { get; set; }
-        public BranchInfo Branch { get; set; }
         public List<CommitExportFormat> Formats { get; set; }
         public ICommand ExportCommand { get; private set; }
 
@@ -77,7 +78,42 @@ namespace GitHelper.ViewModel
             }
         }
 
-        public ExportCommitMessageViewModel(BranchInfo branch, Configuration config)
+        private List<string> _branchNames;
+        public List<string> BranchNames
+        {
+            get => _branchNames;
+            set
+            {
+                _branchNames = value;
+                RaisePropertyChanged("BranchNames");
+            }
+        }
+
+        private string _repoPath;
+        public string RepoPath
+        {
+            get => _repoPath;
+            set
+            {
+                _repoPath = value;
+                RaisePropertyChanged("RepoPath");
+            }
+        }
+
+        private string _selectedBranchname;
+        public string SelectedBranchName
+        {
+            get => _selectedBranchname;
+            set
+            {
+                _selectedBranchname = value;
+                RaisePropertyChanged("SelectedBranchName");
+            }
+        }
+
+        public ICommand LoadBranchCommand { get; private set; }
+
+        public ExportCommitMessageViewModel(Configuration config)
         {
             var explainations = new List<string>();
             foreach (var keyValuePair in CommitExportFormat.KeywordsExample)
@@ -86,31 +122,83 @@ namespace GitHelper.ViewModel
             }
             Keywords = string.Join(Environment.NewLine, explainations);
             Config = config;
-            Branch = branch;
+            RepoPath = Config.RepoPath;
+            LoadBranches();
             Format = "[author-name]\\t[date-g]\\t[message]";
             ExportCommand = new RelayCommand(ExportMethod);
+            LoadBranchCommand = new RelayCommand(LoadBranches);
             StartDate = new DateTime(2018, 1, 1);
             EndDate = DateTime.Now;
         }
 
-        private void ExportMethod()
+        private void LoadBranches()
         {
-            Export(Formats, StartDate, EndDate);
+            var selectedIndex = 0;
+            if (!Utility.IsNullOrEmpty(BranchNames))
+            {
+                selectedIndex = BranchNames.IndexOf(SelectedBranchName);
+            }
+
+            BranchNames = GetBranches(RepoPath)?.Select(e => e.Name)?.ToList();
+            if (Utility.IsNullOrEmpty(BranchNames))
+            {
+                return;
+            }
+
+            if (selectedIndex < 0)
+            {
+                selectedIndex = 0;
+            }
+
+            SelectedBranchName = BranchNames[0];
         }
 
-        private void Export(List<CommitExportFormat> formats, DateTime? startDate, DateTime? endDate)
+        private static List<BranchInfo> GetBranches(string repoPath)
+        {
+            var branches = new List<BranchInfo>();
+            if (!Directory.Exists(repoPath))
+            {
+                MessageBox.Show($"Cannot find folder \"{repoPath}\"", "Error");
+                return branches;
+            }
+
+            using (var repo = new Repository(repoPath))
+            {
+                foreach (var branch in repo.Branches.Where(branch => !branch.IsRemote))
+                {
+                    branches.Add(new BranchInfo(branch.FriendlyName));
+                }
+            }
+
+            branches = branches.OrderBy(b => b.Name).ToList();
+            return branches;
+        }
+
+        private void ExportMethod()
+        {
+            Export(SelectedBranchName, Formats, StartDate, EndDate);
+        }
+
+        private void Export(string branchName, List<CommitExportFormat> formats, DateTime? startDate, DateTime? endDate)
         {
             if (Utility.IsNullOrEmpty(formats))
             {
+                MessageBox.Show("please specify a valid format.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(branchName))
+            {
+                MessageBox.Show("please choose a branch.");
                 return;
             }
 
             using (var repo = new Repository(Config.RepoPath))
             {
-                var selectedBranch = repo.Branches.FirstOrDefault(b => b.FriendlyName == Branch.Name);
+                var selectedBranch = repo.Branches.FirstOrDefault(b => b.FriendlyName == branchName);
                 if (selectedBranch == null)
                 {
-                    MessageBox.Show($"Cannot find branch \"{Branch.Name}\"", "Error");
+                    MessageBox.Show($"Cannot find branch \"{branchName}\"", "Error");
                     return;
                 }
 
@@ -134,7 +222,7 @@ namespace GitHelper.ViewModel
                 }
 
                 var fileNameRegex = new Regex("[/.]+");
-                var fileName = fileNameRegex.Replace(Branch.Name, "_") + "_" + MainWindow.CommitOutputFile;
+                var fileName = fileNameRegex.Replace(branchName, "_") + "_" + CommitOutputFile;
                 File.WriteAllLines(fileName, commitInfos);
                 MessageBox.Show($"Commit messages are exported successfully into file \"{fileName}\"", "Exported Successfully");
             }

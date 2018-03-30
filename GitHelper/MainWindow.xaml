@@ -3,14 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:util="clr-namespace:GitHelper.Helpers"
+        xmlns:helpers="clr-namespace:GitHelper.Helpers"
         xmlns:local="clr-namespace:GitHelper"
         mc:Ignorable="d"
-        SizeToContent="Width"
-        Title="Git Helper" Height="450" MinWidth="900"
-        Icon="icon.ico">
+        Title="Git Helper" 
+        MinHeight="500" MinWidth="800"
+        Height="500" Width="800"
+        Icon="/Images/icon.ico">
     <Window.Resources>
         <ResourceDictionary>
+            <helpers:BoolToVisibilityConverter x:Key="CollapsedIfFalse" TriggerValue="False" IsHidden="False"/>
+            <Image x:Key="HelpIcon" Source="/Images/Help.png"/>
+            <Image x:Key="SettingsIcon" Source="/Images/Settings.png"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -19,96 +23,104 @@
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="0" 
+                    Margin="0,0,0,10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="120"/>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Label Grid.Column="0" Content="Merged in branch:"  Style="{StaticResource LabelText}"/>
-            <TextBox Name="MergedInBranchTextBox" Grid.Column="1" Margin="0, 5" Padding="2, 5"/>
+            <Button Grid.Column="1" Content="{StaticResource SettingsIcon}" 
+                    ToolTip="Settings"
+                    Width="32" Height="32" Margin="5,0,0,0"/>
+            <Button Grid.Column="2" Content="{StaticResource HelpIcon}" 
+                    ToolTip="Help"
+                    Width="32" Height="32" Margin="5,0,0,0"/>
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="120"/>
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Label Grid.Column="0" Content="Ignore branches:" Style="{StaticResource LabelText}"/>
-            <TextBox Name="IgnoredBranchesTextBox" Grid.Column="1" Margin="0, 5" Padding="2, 5"/>
-        </Grid>
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="120"/>
-                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Label Grid.Column="0" Content="Repo Path:" Style="{StaticResource LabelText}"/>
-            <TextBox Name="RepoTextBox" Grid.Column="1" Margin="0, 5" Padding="2, 5"/>
-            <Button Name="StartButton" Grid.Column="2" Margin="5,5,0,5" Width="50" Content="Load"
-                    Style="{StaticResource ButtonNormalCase}"
-                    Click="StartButton_OnClick"/>
+            <ListBox Grid.Column="0" 
+                     ItemsSource="{Binding Actions}"
+                     SelectedItem="{Binding SelectedAction}"
+                     Margin="0,0,5,0">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Margin" Value="0,1"/>
+                        <Setter Property="Padding" Value="0"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="IsSelected" Value="True"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Background="#fff" Width="300">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Button Grid.Row="0" 
+                                    Padding="0"
+                                    Command="{Binding ExecuteCommand}">
+                                <Button.Content>
+                                    <Grid HorizontalAlignment="Left" Margin="5">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Row="0" 
+                                                Text="{Binding Title}"
+                                                FontSize="15"
+                                                FontWeight="Normal"/>
+                                        <TextBlock Grid.Row="1" 
+                                                Width="290"
+                                                Text="{Binding ShortDescription}"
+                                                FontSize="12"
+                                                FontWeight="Normal"
+                                                TextWrapping="NoWrap"/>
+                                    </Grid>
+                                </Button.Content>
+                            </Button>
+                            <Border Grid.Row="1" 
+                                    BorderBrush="#ccc" 
+                                    BorderThickness="1,0,1,1">
+                                <StackPanel HorizontalAlignment="Right" 
+                                            Orientation="Horizontal">
+                                    <Image Source="/Images/Plugin.png" 
+                                           Width="16" Height="16" Margin="5,0,0,0"
+                                           Visibility="{Binding IsPlugin, Converter={StaticResource CollapsedIfFalse}}" 
+                                           ToolTip="This is a plug-in"/>
+                                    <Image Source="/Images/Script.png" 
+                                           Width="16" Height="16" Margin="5,0,0,0"
+                                           Visibility="{Binding IsScript, Converter={StaticResource CollapsedIfFalse}}" 
+                                           ToolTip="This is a script"/>
+                                    <Image Source="/Images/NewWindow.png" 
+                                           Width="16" Height="16" Margin="5,0,0,0"
+                                           Visibility="{Binding HasNewWindow, Converter={StaticResource CollapsedIfFalse}}" 
+                                           ToolTip="{x:Static local:ActionInfo.NewWindowToolTip}"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <RichTextBox IsReadOnly="True" 
+                         Grid.Column="1"
+                         Margin="5,0,0,0"
+                         HorizontalAlignment="Stretch"
+                         VerticalAlignment="Stretch"
+                         Background="#eee"
+                         BorderThickness="0"
+                         Padding="10"
+                         helpers:RichTextBoxHelper.DocumentXaml="{Binding FullInfo}" />
+
         </Grid>
-        <ListView Grid.Row="3" Name="BranchListView" Margin="0, 5" 
-                  SelectionChanged="BranchListView_OnSelectionChanged"
-                  IsSynchronizedWithCurrentItem="True"
-                    util:GridViewSort.AutoSort="True">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Name}" >
-                        <GridViewColumn.Header>
-                            <TextBlock Text="Name" Padding="5,0" FontWeight="Normal"/>
-                        </GridViewColumn.Header>
-                    </GridViewColumn>
-                    <GridViewColumn Width="Auto">
-                        <GridViewColumn.Header>
-                            <TextBlock Text="Is Merged" Padding="5,0" HorizontalAlignment="Center" FontWeight="Normal"/>
-                        </GridViewColumn.Header>
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding IsLocal}" Width="50" TextAlignment="Center" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Width="600" DisplayMemberBinding="{Binding LastCommit}">
-                        <GridViewColumn.Header>
-                            <TextBlock Text="Last Commit" HorizontalAlignment="Center" FontWeight="Normal"/>
-                        </GridViewColumn.Header>
-                    </GridViewColumn>
-                    <GridViewColumn Width="150">
-                        <GridViewColumn.Header>
-                            <TextBlock Text="Last Commit Time" FontWeight="Normal"/>
-                        </GridViewColumn.Header>
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding LastCommitDate}" Width="130" TextAlignment="Right" ToolTip="{Binding LastCommitDateTime}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Width="150">
-                        <GridViewColumn.Header>
-                            <TextBlock Text="Merged In Time" HorizontalAlignment="Center" FontWeight="Normal"/>
-                        </GridViewColumn.Header>
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding MergedInDate}" Width="130" TextAlignment="Right" ToolTip="{Binding MergedInDateTime}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,5,0,0" HorizontalAlignment="Right">
-            <CheckBox Name="OnlyDeleteMergedCheckBox" Margin="5,0,10,0" VerticalAlignment="Center" Content="Only delete branches which are merged" Click="OnlyDeleteMergedCheckBox_OnClick"/>
-            <Button Name="ExportCommitMessageButton" Content="Export Commit Message" Margin="5,0,0,0" Padding="5, 0" Height="32" 
-                    Style="{StaticResource ButtonNormalCase}"
-                    Click="ExportCommitMessageButton_OnClick"/>
-            <Button Name="DeleteButton" Content="Delete" Margin="5,0,0,0" Width="50" Height="32" 
-                    Style="{StaticResource ButtonNormalCase}"
-                    Click="DeleteButton_OnClick"/>
-        </StackPanel>
     </Grid>
 </Window>

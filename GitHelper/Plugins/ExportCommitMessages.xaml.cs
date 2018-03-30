@@ -1,5 +1,5 @@
 using System.Windows;
-using GitHelper.ViewModel;
+using GitHelper.Plugins;
 
 namespace GitHelper
 {
@@ -8,10 +8,9 @@ namespace GitHelper
     /// </summary>
     public partial class ExportCommitMessages : Window
     {
-        public ExportCommitMessages(BranchInfo branch, Configuration config)
+        public ExportCommitMessages()
         {
             InitializeComponent();
-            DataContext = new ExportCommitMessageViewModel(branch, config);
         }
     }
 }
