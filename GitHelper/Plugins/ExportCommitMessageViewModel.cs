@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+﻿using GalaSoft.MvvmLight.Command;
 using GitHelper.Base;
 using LibGit2Sharp;
 using System;
@@ -251,10 +250,12 @@ namespace GitHelper.Plugins
                         result.Add(commit.Author.When.ToString(format.SecondPart));
                         break;
                     case CommitMessageType.MessageShort:
-                        result.Add(commit.MessageShort);
+                        var messageShort = commit.MessageShort;
+                        result.Add(messageShort.Trim());
                         break;
                     case CommitMessageType.Message:
-                        result.Add(commit.Message);
+                        var message = commit.Message;
+                        result.Add(message.Trim());
                         break;
                     case CommitMessageType.Text:
                         result.Add(format.SecondPart);

@@ -1,5 +1,4 @@
 using System.Windows;
-using GitHelper.Plugins;
 
 namespace GitHelper
 {

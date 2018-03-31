@@ -1,13 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace GitHelper.Interfaces
+﻿namespace GitHelper.Interfaces
 {
-    public interface IGitHelperActionMeta
+    public interface IGitHelperActionMeta: IGitHelperActionScriptBase
     {
-        string Title { get; }
-        string Description { get; }
-        IList<ActionFeatures> Features { get; }
-
         void ShowDialog(Configuration configuration);
     }
 }

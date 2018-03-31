@@ -7,7 +7,7 @@ namespace GitHelper.Plugins
     [GitHelperAction]
     public class ManageBranchesMeta : GitHelperActionBase<ManageBranches, ManageBranchesViewModel>
     {
-        public override string Title => "Manage Branches";
+        public override string Name => "Manage Branches";
 
         public override string Description => "Show which branch has been merged into a specific branch";
 

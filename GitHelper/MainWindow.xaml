@@ -9,14 +9,17 @@
         Title="Git Helper" 
         MinHeight="500" MinWidth="800"
         Height="500" Width="800"
-        Icon="/Images/icon.ico">
+        Icon="/Images/icon.ico"
+        d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel, IsDesignTimeCreatable=True}">
     <Window.Resources>
         <ResourceDictionary>
             <helpers:BoolToVisibilityConverter x:Key="CollapsedIfFalse" TriggerValue="False" IsHidden="False"/>
             <Image x:Key="HelpIcon" Source="/Images/Help.png"/>
             <Image x:Key="SettingsIcon" Source="/Images/Settings.png"/>
+            <Image x:Key="ExtensionIcon" Source="/Images/Extension.png"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="/Styles/ButtonStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -28,15 +31,24 @@
         <Grid Grid.Row="0" 
                     Margin="0,0,0,10">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="{StaticResource ExtensionIcon}" 
+                    ToolTip="Settings"
+                    Style="{StaticResource MetroButton}"
+                    Width="32" Height="32" Margin="5,0,0,0"
+                    Command="{Binding OpenManageExtensionCommand}"/>
             <Button Grid.Column="1" Content="{StaticResource SettingsIcon}" 
                     ToolTip="Settings"
-                    Width="32" Height="32" Margin="5,0,0,0"/>
+                    Style="{StaticResource MetroButton}"
+                    Width="32" Height="32" Margin="5,0,0,0"
+                    Command="{Binding OpenSettingsCommand}"/>
             <Button Grid.Column="2" Content="{StaticResource HelpIcon}" 
                     ToolTip="Help"
+                    Style="{StaticResource MetroButton}"
                     Width="32" Height="32" Margin="5,0,0,0"/>
         </Grid>
         <Grid Grid.Row="1">
@@ -68,24 +80,20 @@
                             </Grid.RowDefinitions>
                             <Button Grid.Row="0" 
                                     Padding="0"
+                                    Height="50"
+                                    Style="{StaticResource MetroButton}"
                                     Command="{Binding ExecuteCommand}">
                                 <Button.Content>
-                                    <Grid HorizontalAlignment="Left" Margin="5">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="*"/>
-                                        </Grid.RowDefinitions>
-                                        <TextBlock Grid.Row="0" 
-                                                Text="{Binding Title}"
-                                                FontSize="15"
-                                                FontWeight="Normal"/>
-                                        <TextBlock Grid.Row="1" 
-                                                Width="290"
-                                                Text="{Binding ShortDescription}"
-                                                FontSize="12"
-                                                FontWeight="Normal"
-                                                TextWrapping="NoWrap"/>
-                                    </Grid>
+                                    <TextBlock Grid.Row="0" 
+                                               Width="290"
+                                               Height="35"
+                                               HorizontalAlignment="Left"
+                                               Margin="5"
+                                               Padding="5"
+                                               Text="{Binding Name}"
+                                               FontSize="17"
+                                               FontWeight="Normal"
+                                               TextWrapping="NoWrap"/>
                                 </Button.Content>
                             </Button>
                             <Border Grid.Row="1" 

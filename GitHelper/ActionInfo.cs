@@ -13,7 +13,7 @@ namespace GitHelper
     {
         public const string NewWindowToolTip = "This plugin opens a new window";
 
-        public string Title { get; set; }
+        public string Name { get; set; }
 
         public string ShortDescription { get; set; }
 
@@ -34,7 +34,7 @@ namespace GitHelper
 
         public ActionInfo(IGitHelperActionMeta actionMeta, Configuration config)
         {
-            Title = actionMeta.Title;
+            Name = actionMeta.Name;
             Description = actionMeta.Description;
             ShortDescription = actionMeta.Description.Truncate(50);
             Features = actionMeta.Features;
@@ -51,10 +51,11 @@ namespace GitHelper
         internal string GetFullInfo()
         {
             var doc = new FlowDocument();
-            var titleRun = new Run(Title);
-            titleRun.FontSize = 16;
-            var title = new Bold(titleRun);
-            var titleParagraph = new Paragraph(title);
+            doc.FontSize = 14;
+            var nameRun = new Run(Name);
+            nameRun.FontSize = 16;
+            var name = new Bold(nameRun);
+            var nameParagraph = new Paragraph(name);
 
             var descriptionRun = new Run(Description);
             var descriptionParagraph = new Paragraph(descriptionRun);
@@ -62,7 +63,7 @@ namespace GitHelper
             var opensNewWindow = new Run(NewWindowToolTip);
             var opensNewWindowParagraph = new Paragraph(opensNewWindow);
 
-            doc.Blocks.Add(titleParagraph);
+            doc.Blocks.Add(nameParagraph);
             doc.Blocks.Add(descriptionParagraph);
             doc.Blocks.Add(opensNewWindowParagraph);
             var result = ToXaml(doc)?.ToString();

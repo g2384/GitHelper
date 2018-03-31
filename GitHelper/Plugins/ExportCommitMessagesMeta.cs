@@ -7,7 +7,7 @@ namespace GitHelper.Plugins
     [GitHelperAction]
     public class ExportCommitMessagesMeta : GitHelperActionBase<ExportCommitMessages, ExportCommitMessageViewModel>
     {
-        public override string Title => "Export Commit Messages";
+        public override string Name => "Export Commit Messages";
 
         public override string Description => "Export commit messages in a specified format";
 

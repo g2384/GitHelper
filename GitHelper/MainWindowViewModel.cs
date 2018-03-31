@@ -1,11 +1,14 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 using GitHelper.Attributes;
+using GitHelper.Helpers;
 using GitHelper.Interfaces;
 using NLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
 
 namespace GitHelper
 {
@@ -49,6 +52,10 @@ namespace GitHelper
             }
         }
 
+        public ICommand OpenSettingsCommand { get; private set; }
+
+        public ICommand OpenManageExtensionCommand { get; private set; }
+
         public MainWindowViewModel()
         {
             Config = Configuration.GetConfiguration();
@@ -61,7 +68,19 @@ namespace GitHelper
                 actions.Add(actionInfo);
             }
             
-            Actions = new ObservableCollection<ActionInfo>(actions.OrderBy(a => a.Title));
+            Actions = new ObservableCollection<ActionInfo>(actions.OrderBy(a => a.Name));
+            OpenSettingsCommand = new RelayCommand(OpenSettings);
+            OpenManageExtensionCommand = new RelayCommand(OpenManageExtension);
+        }
+
+        private void OpenManageExtension()
+        {
+            WindowService.ShowWindow<ManageExtensions>(new ManageExtensionsViewModel(Config));
+        }
+
+        public void OpenSettings()
+        {
+            WindowService.ShowWindow<Settings>(new SettingsViewModel());
         }
 
         private void DisplayFullInfo()

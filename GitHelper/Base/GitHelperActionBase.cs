@@ -9,7 +9,7 @@ namespace GitHelper.Base
         where TWindow : Window, new()
         where TViewModel: ActionViewModelBase
     {
-        public abstract string Title { get; }
+        public abstract string Name { get; }
                
         public abstract string Description { get; }
 

@@ -19,6 +19,12 @@ namespace GitHelper
 
         public bool OnlyDeleteMerged { get; set; } = true;
 
+        public bool ShowWarningBeforeDeletingBranch { get; set; } = true;
+
+        public bool ShowWarningBeforeExecutingScript { get; set; } = true;
+
+        public List<string> ExtensionPaths { get; set; } = new List<string>();
+
         [JsonIgnore]
         public string IgnoredBranchesString
         {
