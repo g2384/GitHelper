@@ -1,15 +1,12 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using GitHelper.Interfaces;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace GitHelper
 {
-    public class ActionInfo
+    public class ExtensionInfo
     {
         public const string NewWindowToolTip = "This plugin opens a new window";
 
@@ -32,7 +29,7 @@ namespace GitHelper
 
         public bool HasNewWindow => Features.Contains(ActionFeatures.HasNewWindow);
 
-        public ActionInfo(IGitHelperActionMeta actionMeta, Configuration config)
+        public ExtensionInfo(IGitHelperActionMeta actionMeta, Configuration config)
         {
             Name = actionMeta.Name;
             Description = actionMeta.Description;
@@ -41,6 +38,14 @@ namespace GitHelper
             _actionMeta = actionMeta;
             _config = config;
             ExecuteCommand = new RelayCommand(Execute);
+        }
+
+        public ExtensionInfo(IGitHelperExtensionFile extensionFile)
+        {
+            Name = extensionFile.Name;
+            Description = extensionFile.Description;
+            ShortDescription = extensionFile.ShortDescription;
+            Features = extensionFile.Features;
         }
 
         private void Execute()
@@ -59,37 +64,17 @@ namespace GitHelper
 
             var descriptionRun = new Run(Description);
             var descriptionParagraph = new Paragraph(descriptionRun);
-
-            var opensNewWindow = new Run(NewWindowToolTip);
-            var opensNewWindowParagraph = new Paragraph(opensNewWindow);
-
             doc.Blocks.Add(nameParagraph);
             doc.Blocks.Add(descriptionParagraph);
-            doc.Blocks.Add(opensNewWindowParagraph);
-            var result = ToXaml(doc)?.ToString();
+
+            if (Features.Contains(ActionFeatures.HasNewWindow))
+            {
+                var opensNewWindow = new Run(NewWindowToolTip);
+                var opensNewWindowParagraph = new Paragraph(opensNewWindow);
+                doc.Blocks.Add(opensNewWindowParagraph);
+            }
+            var result = doc.ToXaml();
             return result;
-        }
-
-        public string ToXaml(FlowDocument flowDocument)
-        {
-            if (flowDocument == null)
-            {
-                return null;
-            }
-
-            // write XAML out to a MemoryStream
-            TextRange tr = new TextRange(
-                flowDocument.ContentStart,
-                flowDocument.ContentEnd);
-
-            string xamlText;
-            using (MemoryStream ms = new MemoryStream())
-            {
-                tr.Save(ms, DataFormats.Xaml);
-                xamlText = ASCIIEncoding.Default.GetString(ms.ToArray());
-            }
-
-            return xamlText.ToString();
         }
     }
 }

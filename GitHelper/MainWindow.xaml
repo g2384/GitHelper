@@ -17,6 +17,8 @@
             <Image x:Key="HelpIcon" Source="/Images/Help.png"/>
             <Image x:Key="SettingsIcon" Source="/Images/Settings.png"/>
             <Image x:Key="ExtensionIcon" Source="/Images/Extension.png"/>
+            <Image x:Key="HomeIcon" Source="/Images/Home.png"/>
+            <Image x:Key="RefreshIcon" Source="/Images/Refresh.png"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/Styles.xaml"/>
                 <ResourceDictionary Source="/Styles/ButtonStyle.xaml"/>
@@ -28,29 +30,34 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" 
-                    Margin="0,0,0,10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="{StaticResource ExtensionIcon}" 
+        <StackPanel Grid.Row="0" 
+                    Margin="0,0,0,10" 
+                    Orientation="Horizontal">
+            <Button Content="{StaticResource HomeIcon}" 
                     ToolTip="Settings"
-                    Style="{StaticResource MetroButton}"
-                    Width="32" Height="32" Margin="5,0,0,0"
+                    Style="{StaticResource MetroIconButton}"
+                    Width="45" Height="32"
+                    Command="{Binding ShowHomeCommand}"/>
+            <Button  Content="{StaticResource RefreshIcon}" 
+                    ToolTip="Settings"
+                    Style="{StaticResource MetroIconButton}"
+                    Width="45" Height="32"
+                    Command="{Binding RefreshCommand}"/>
+            <Button Content="{StaticResource ExtensionIcon}" 
+                    ToolTip="Settings"
+                    Style="{StaticResource MetroIconButton}"
+                    Width="45" Height="32"
                     Command="{Binding OpenManageExtensionCommand}"/>
-            <Button Grid.Column="1" Content="{StaticResource SettingsIcon}" 
+            <Button Content="{StaticResource SettingsIcon}" 
                     ToolTip="Settings"
-                    Style="{StaticResource MetroButton}"
-                    Width="32" Height="32" Margin="5,0,0,0"
+                    Style="{StaticResource MetroIconButton}"
+                    Width="45" Height="32"
                     Command="{Binding OpenSettingsCommand}"/>
-            <Button Grid.Column="2" Content="{StaticResource HelpIcon}" 
+            <Button Content="{StaticResource HelpIcon}" 
                     ToolTip="Help"
-                    Style="{StaticResource MetroButton}"
-                    Width="32" Height="32" Margin="5,0,0,0"/>
-        </Grid>
+                    Style="{StaticResource MetroIconButton}"
+                    Width="45" Height="32"/>
+        </StackPanel>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -112,14 +119,14 @@
                                     <Image Source="/Images/NewWindow.png" 
                                            Width="16" Height="16" Margin="5,0,0,0"
                                            Visibility="{Binding HasNewWindow, Converter={StaticResource CollapsedIfFalse}}" 
-                                           ToolTip="{x:Static local:ActionInfo.NewWindowToolTip}"/>
+                                           ToolTip="{x:Static local:ExtensionInfo.NewWindowToolTip}"/>
                                 </StackPanel>
                             </Border>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <RichTextBox IsReadOnly="True" 
+            <!--<RichTextBox IsReadOnly="True" 
                          Grid.Column="1"
                          Margin="5,0,0,0"
                          HorizontalAlignment="Stretch"
@@ -127,8 +134,9 @@
                          Background="#eee"
                          BorderThickness="0"
                          Padding="10"
-                         helpers:RichTextBoxHelper.DocumentXaml="{Binding FullInfo}" />
-
+                         helpers:RichTextBoxHelper.DocumentXaml="{Binding FullInfo}" />-->
+            <WebBrowser Grid.Column="1" Margin="5,0,0,0"
+                        helpers:BrowserBehavior.Html="{Binding FullInfo}"/>
         </Grid>
     </Grid>
 </Window>

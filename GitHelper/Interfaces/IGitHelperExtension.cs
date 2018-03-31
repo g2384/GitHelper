@@ -2,7 +2,7 @@
 
 namespace GitHelper.Interfaces
 {
-    public interface IGitHelperActionScriptBase
+    public interface IGitHelperExtension
     {
         string Name { get; }
         string Description { get; }

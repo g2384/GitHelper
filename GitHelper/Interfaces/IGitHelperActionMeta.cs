@@ -1,6 +1,6 @@
 ﻿namespace GitHelper.Interfaces
 {
-    public interface IGitHelperActionMeta: IGitHelperActionScriptBase
+    public interface IGitHelperActionMeta: IGitHelperExtension
     {
         void ShowDialog(Configuration configuration);
     }

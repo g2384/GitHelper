@@ -23,83 +23,111 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <Label Grid.Column="0" Content="Select Script(s)" 
-                           Style="{StaticResource LabelText}"/>
-            <TextBox Grid.Column="1" Margin="0, 5" Padding="2, 5" 
-                     Text="{Binding SelectedPath}"/>
-            <Button Grid.Column="2" Content="..." 
-                            Style="{StaticResource MetroButton}" 
-                            Width="20"
-                            Margin="-25,0,0,0"
-                            Command="{Binding OpenFileCommand}"/>
-            <Button Grid.Column="3" Content="Add" 
-                            Style="{StaticResource MetroButton}" 
-                            Width="50"
-                            Margin="5,0,0,0"
-                            IsEnabled="{Binding CanAdd}"
-                            Command="{Binding AddScriptCommand}"/>
-        </Grid>
-        <ListView Grid.Row="1" 
-                  Margin="0,10,0,0"
-                  ItemsSource="{Binding Extensions}"
-                  SelectionMode="Single"
-                  SelectedItem="{Binding SelectedExtension}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Width="Auto">
-                        <GridViewColumn.Header>
-                            <TextBlock Text="Name" Padding="5,0" FontWeight="Normal"/>
-                        </GridViewColumn.Header>
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Name}" MinWidth="50"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Width="250">
-                        <GridViewColumn.Header>
-                            <TextBlock Text="Description" Width="250" TextAlignment="Center" FontWeight="Normal"/>
-                        </GridViewColumn.Header>
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding ShortDescription}"
-                                           ToolTip="{Binding Description}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <StackPanel Grid.Row="1" 
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" 
+                       Content="Select Script(s)" 
+                       Style="{StaticResource LabelText}"/>
+                <TextBox Grid.Row="0" Grid.Column="1" 
+                         Margin="0, 5" Padding="2, 5" 
+                         Text="{Binding SelectedPath}"/>
+                <Button Grid.Row="0" Grid.Column="2" 
+                        Content="..." 
+                        Style="{StaticResource MetroButton}" 
+                        Width="20"
+                        Margin="-25,0,0,0"
+                        Command="{Binding OpenFileCommand}"/>
+                <Button Grid.Row="0" Grid.Column="3" 
+                        Content="Add" 
+                        Style="{StaticResource MetroButton}" 
+                        Width="50"
+                        Margin="5,0,0,0"
+                        IsEnabled="{Binding CanAdd}"
+                        Command="{Binding AddScriptCommand}"/>
+                <CheckBox Grid.Row="1" Grid.Column="1"
+                          Content="Use relative path"
+                          IsChecked="{Binding UseRelativePath, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+            <ListView Grid.Row="1" 
+                      Margin="0,10,0,0"
+                      ItemsSource="{Binding Extensions}"
+                      SelectionMode="Single"
+                      SelectedItem="{Binding SelectedExtension}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="Auto">
+                            <GridViewColumn.Header>
+                                <TextBlock Text="Name" Padding="5,0" FontWeight="Normal"/>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" MinWidth="50"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Width="250">
+                            <GridViewColumn.Header>
+                                <TextBlock Text="Description" Width="250" TextAlignment="Center" FontWeight="Normal"/>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ShortDescription}"
+                                               ToolTip="{Binding Description}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Width="Auto">
+                            <GridViewColumn.Header>
+                                <TextBlock Text="Path" TextAlignment="Center" FontWeight="Normal"/>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding FilePath}"
+                                               ToolTip="{Binding FilePath}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <StackPanel Grid.Row="2" 
                     Orientation="Horizontal"
                     HorizontalAlignment="Left">
-            <Button Style="{StaticResource MetroButton}" 
-                    Content="Delete" 
-                    Width="50"
-                    IsEnabled="{Binding CanDelete}"
-                    Command="{Binding DeleteExtensionCommand}"/>
-        </StackPanel>
-    </Grid>
-        <StackPanel Grid.Row="1" 
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right">
-            <Button Style="{StaticResource MetroButton}" 
+                <Button  Style="{StaticResource MetroButton}" 
+                        Content="Delete" 
+                        Width="50"
+                        IsEnabled="{Binding CanDelete}"
+                        Command="{Binding DeleteExtensionCommand}"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Style="{StaticResource LinkButton}"
+                    Margin="5,0,0,0"
+                    Content="How to write a .bat script" />
+            <Button Grid.Column="1" Style="{StaticResource MetroButton}" 
                     Content="Save" 
                     Width="50"
-                    Command="{Binding DeleteExtensionCommand}"/>
-        </StackPanel>
+                    Command="{Binding SaveCommand}"/>
+        </Grid>
     </Grid>
 </Window>

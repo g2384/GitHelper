@@ -14,7 +14,7 @@ namespace GitHelper.Helpers
             throw new NotImplementedException();
         }
 
-        public IList<string> OpenFilesDialog(string defaultPath = null, string extFilter = null)
+        public IList<string> SelectFilesDialog(out bool? result, string defaultPath = null, string extFilter = null)
         {
             var fd = new OpenFileDialog();
             fd.Multiselect = true;
@@ -22,7 +22,7 @@ namespace GitHelper.Helpers
             {
                 fd.Filter = extFilter;
             }
-            fd.ShowDialog();
+            result = fd.ShowDialog();
 
             return fd.FileNames.ToList();
         }

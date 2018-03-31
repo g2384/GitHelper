@@ -1,20 +1,18 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GitHelper.Helpers;
-using System;
+using GitHelper.Interfaces;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 
 namespace GitHelper
 {
     public class ManageExtensionsViewModel : ViewModelBase
     {
-        private ObservableCollection<GitHelperExtension> _extensions;
-        public ObservableCollection<GitHelperExtension> Extensions
+        private ObservableCollection<IGitHelperExtensionFile> _extensions;
+        public ObservableCollection<IGitHelperExtensionFile> Extensions
         {
             get => _extensions;
             set
@@ -24,8 +22,8 @@ namespace GitHelper
             }
         }
 
-        private GitHelperExtension _selectedExtensions;
-        public GitHelperExtension SelectedExtension
+        private IGitHelperExtensionFile _selectedExtensions;
+        public IGitHelperExtensionFile SelectedExtension
         {
             get => _selectedExtensions;
             set
@@ -48,6 +46,20 @@ namespace GitHelper
             }
         }
 
+        private bool _useRelativePath;
+        public bool UseRelativePath
+        {
+            get => _useRelativePath;
+            set
+            {
+                _useRelativePath = value;
+                var relativePaths = Utility.GetRelativePaths(_selectedFilePaths, System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
+                SetSelectedPath(relativePaths);
+                RaisePropertyChanged("SelectedPath");
+                RaisePropertyChanged("UseRelativePath");
+            }
+        }
+
         public bool CanDelete => SelectedExtension != null;
 
         public bool CanAdd => !string.IsNullOrWhiteSpace(SelectedPath);
@@ -60,47 +72,30 @@ namespace GitHelper
 
         public ICommand DeleteExtensionCommand { get; private set; }
 
+        public ICommand SaveCommand { get; private set; }
+
+        private Configuration _configuration;
+
         public ManageExtensionsViewModel(Configuration configuration)
         {
-            Extensions = GetExtensions(configuration.ExtensionPaths);
+            _configuration = configuration;
+            Extensions = new ObservableCollection<IGitHelperExtensionFile>(ExtensionViewModelHelper.GetExtensionFiles(configuration.ExtensionPaths));
             OpenFileCommand = new RelayCommand(OpenFile);
             AddScriptCommand = new RelayCommand(AddScript);
             DeleteExtensionCommand = new RelayCommand(DeleteExtension);
+            SaveCommand = new RelayCommand(Save);
         }
 
-        private ObservableCollection<GitHelperExtension> GetExtensions(List<string> extensionPaths)
+        private void Save()
         {
-            var extensions = new ObservableCollection<GitHelperExtension>();
-            if (Utility.IsNullOrEmpty(extensionPaths))
-            {
-                return extensions;
-            }
-
-            foreach(var path in extensionPaths)
-            {
-                if (!File.Exists(path))
-                {
-                    continue;
-                }
-
-                try
-                {
-                    var lines = File.ReadAllLines(path);
-                    var extension = new GitHelperExtension(lines);
-                    extensions.Add(extension);
-                }
-                catch(Exception e)
-                {
-                    MessageBox.Show(e.Message);
-                }
-            }
-
-            return extensions;
+            var paths = Extensions.Select(e => e.FilePath).ToList();
+            _configuration.ExtensionPaths = paths;
+            _configuration.Save();
         }
 
         private void DeleteExtension()
         {
-            if (SelectedPath == null)
+            if (SelectedExtension == null)
             {
                 return;
             }
@@ -126,50 +121,41 @@ namespace GitHelper
 
         private void AddScript()
         {
-            if (Utility.IsNullOrEmpty(_selectedFilePaths))
+            var extensions = ExtensionViewModelHelper.GetExtensionFiles(_selectedFilePaths, true);
+            foreach (var e in extensions)
             {
-                return;
-            }
-
-            foreach (var filePath in _selectedFilePaths)
-            {
-                if (!File.Exists(filePath))
-                {
-                    MessageBox.Show($"Cannot find file \"{filePath}\"");
-                    continue;
-                }
-
-                try
-                {
-                    var lines = File.ReadAllLines(filePath);
-                    var extension = new GitHelperExtension(lines);
-                    Extensions.Add(extension);
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.Message);
-                }
+                Extensions.Add(e);
             }
 
             _selectedFilePaths = new List<string>();
-            SelectedPath = string.Empty;
+            SelectedPath = null;
         }
 
         private void OpenFile()
         {
-            _selectedFilePaths = new FileDialogService().OpenFilesDialog(null).ToList();
-            if (Utility.IsNullOrEmpty(_selectedFilePaths))
+            _selectedFilePaths = new FileDialogService().SelectFilesDialog(out bool? result, null, "Extensions|*.bat;*.dll;*.exe").ToList();
+            if (result != true)
             {
-                SelectedPath = string.Empty;
+                return;
             }
 
-            if (_selectedFilePaths.Count == 1)
+            SetSelectedPath(_selectedFilePaths);
+        }
+
+        private void SetSelectedPath(List<string> paths)
+        {
+            if (Utility.IsNullOrEmpty(paths))
             {
-                SelectedPath = _selectedFilePaths[0];
+                SelectedPath = null;
+            }
+
+            if (paths.Count == 1)
+            {
+                SelectedPath = paths[0];
             }
             else
             {
-                SelectedPath = "\"" + string.Join("\", \"", _selectedFilePaths) + "\"";
+                SelectedPath = "\"" + string.Join("\", \"", paths) + "\"";
             }
         }
     }
