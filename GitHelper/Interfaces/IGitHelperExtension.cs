@@ -6,6 +6,6 @@ namespace GitHelper.Interfaces
     {
         string Name { get; }
         string Description { get; }
-        IList<ActionFeatures> Features { get; }
+        IList<ExtensionFeatures> Features { get; }
     }
 }

@@ -2,9 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Windows;
-using System.Windows.Documents;
 
 namespace GitHelper
 {
@@ -65,31 +63,6 @@ namespace GitHelper
             }
 
             return extensions;
-        }
-    }
-
-    public static class FlowDocumentExtensions
-    {
-        public static string ToXaml(this FlowDocument flowDocument)
-        {
-            if (flowDocument == null)
-            {
-                return null;
-            }
-
-            // write XAML out to a MemoryStream
-            TextRange tr = new TextRange(
-                flowDocument.ContentStart,
-                flowDocument.ContentEnd);
-
-            string xamlText;
-            using (MemoryStream ms = new MemoryStream())
-            {
-                tr.Save(ms, DataFormats.Xaml);
-                xamlText = ASCIIEncoding.Default.GetString(ms.ToArray());
-            }
-
-            return xamlText.ToString();
         }
     }
 }

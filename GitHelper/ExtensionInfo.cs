@@ -1,14 +1,14 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using GitHelper.Interfaces;
 using System.Collections.Generic;
-using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace GitHelper
 {
     public class ExtensionInfo
     {
-        public const string NewWindowToolTip = "This plugin opens a new window";
+        public const string OpensANewWindow = "opens a new window";
+        public const string NewWindowToolTip = "This extension " + OpensANewWindow;
 
         public string Name { get; set; }
 
@@ -16,18 +16,18 @@ namespace GitHelper
 
         public string Description { get; set; }
 
-        public IList<ActionFeatures> Features { get; set; }
+        public IList<ExtensionFeatures> Features { get; set; }
 
         public ICommand ExecuteCommand { get; private set; }
 
         private IGitHelperActionMeta _actionMeta;
         private Configuration _config;
 
-        public bool IsPlugin => Features.Contains(ActionFeatures.IsPlugin);
+        public bool IsPlugin => Features.Contains(ExtensionFeatures.IsAssembly);
 
-        public bool IsScript => Features.Contains(ActionFeatures.IsScript);
+        public bool IsScript => Features.Contains(ExtensionFeatures.IsScript);
 
-        public bool HasNewWindow => Features.Contains(ActionFeatures.HasNewWindow);
+        public bool HasNewWindow => Features.Contains(ExtensionFeatures.HasNewWindow);
 
         public ExtensionInfo(IGitHelperActionMeta actionMeta, Configuration config)
         {
@@ -55,26 +55,38 @@ namespace GitHelper
 
         internal string GetFullInfo()
         {
-            var doc = new FlowDocument();
-            doc.FontSize = 14;
-            var nameRun = new Run(Name);
-            nameRun.FontSize = 16;
-            var name = new Bold(nameRun);
-            var nameParagraph = new Paragraph(name);
-
-            var descriptionRun = new Run(Description);
-            var descriptionParagraph = new Paragraph(descriptionRun);
-            doc.Blocks.Add(nameParagraph);
-            doc.Blocks.Add(descriptionParagraph);
-
-            if (Features.Contains(ActionFeatures.HasNewWindow))
+            var html = Utility.GetResourceText("pack://application:,,,/HtmlPages/ExtensionInfo.html");
+            html = html.Replace("{Name}", Name);
+            html = html.Replace("{Description}", Description);
+            string featureInfo = string.Empty;
+            if (!Utility.IsNullOrEmpty(Features))
             {
-                var opensNewWindow = new Run(NewWindowToolTip);
-                var opensNewWindowParagraph = new Paragraph(opensNewWindow);
-                doc.Blocks.Add(opensNewWindowParagraph);
+                var features = new List<string>();
+                foreach (var f in Features)
+                {
+                    switch (f)
+                    {
+                        case ExtensionFeatures.HasNewWindow:
+                            features.Add(OpensANewWindow);
+                            break;
+                        case ExtensionFeatures.IsScript:
+                            break;
+                        case ExtensionFeatures.IsAssembly:
+                            break;
+                    }
+                }
+                if (!Utility.IsNullOrEmpty(features))
+                {
+
+                    var featuresString = string.Join(", ", features);
+                    featureInfo = $@"<div class='bottom'>
+        <span class='grey'>This extension {featuresString}</span>
+    </div>";
+                }
             }
-            var result = doc.ToXaml();
-            return result;
+
+            html = html.Replace("{Features}", featureInfo);
+            return html;
         }
     }
 }

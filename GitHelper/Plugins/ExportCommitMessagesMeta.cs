@@ -11,9 +11,9 @@ namespace GitHelper.Plugins
 
         public override string Description => "Export commit messages in a specified format";
 
-        public override IList<ActionFeatures> Features => new List<ActionFeatures>()
+        public override IList<ExtensionFeatures> Features => new List<ExtensionFeatures>()
         {
-            ActionFeatures.HasNewWindow, ActionFeatures.IsPlugin
+            ExtensionFeatures.HasNewWindow, ExtensionFeatures.IsAssembly
         };
     }
 }

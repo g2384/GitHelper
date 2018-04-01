@@ -11,6 +11,10 @@ namespace GitHelper
         {
             InitializeComponent();
             DataContext = new MainWindowViewModel();
+            FrameworkElement.StyleProperty.OverrideMetadata(typeof(Window), new FrameworkPropertyMetadata
+            {
+                DefaultValue = FindResource(typeof(Window))
+            });
         }
     }
 }

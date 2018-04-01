@@ -13,7 +13,7 @@ namespace GitHelper.Base
                
         public abstract string Description { get; }
 
-        public abstract IList<ActionFeatures> Features { get; }
+        public abstract IList<ExtensionFeatures> Features { get; }
 
         public void ShowDialog(Configuration configuration)
         {

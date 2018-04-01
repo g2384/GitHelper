@@ -1,9 +1,9 @@
 ﻿namespace GitHelper
 {
-    public enum ActionFeatures
+    public enum ExtensionFeatures
     {
         HasNewWindow,
         IsScript,
-        IsPlugin
+        IsAssembly
     }
 }

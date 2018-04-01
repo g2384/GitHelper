@@ -11,9 +11,9 @@ namespace GitHelper.Plugins
 
         public override string Description => "Show which branch has been merged into a specific branch";
 
-        public override IList<ActionFeatures> Features => new List<ActionFeatures>()
+        public override IList<ExtensionFeatures> Features => new List<ExtensionFeatures>()
         {
-            ActionFeatures.HasNewWindow, ActionFeatures.IsPlugin
+            ExtensionFeatures.HasNewWindow, ExtensionFeatures.IsAssembly
         };
     }
 }

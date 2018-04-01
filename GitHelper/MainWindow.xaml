@@ -34,17 +34,17 @@
                     Margin="0,0,0,10" 
                     Orientation="Horizontal">
             <Button Content="{StaticResource HomeIcon}" 
-                    ToolTip="Settings"
+                    ToolTip="Home"
                     Style="{StaticResource MetroIconButton}"
                     Width="45" Height="32"
                     Command="{Binding ShowHomeCommand}"/>
             <Button  Content="{StaticResource RefreshIcon}" 
-                    ToolTip="Settings"
+                    ToolTip="Refresh"
                     Style="{StaticResource MetroIconButton}"
                     Width="45" Height="32"
                     Command="{Binding RefreshCommand}"/>
             <Button Content="{StaticResource ExtensionIcon}" 
-                    ToolTip="Settings"
+                    ToolTip="Manage Extensions"
                     Style="{StaticResource MetroIconButton}"
                     Width="45" Height="32"
                     Command="{Binding OpenManageExtensionCommand}"/>
@@ -69,7 +69,7 @@
                      Margin="0,0,5,0">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
-                        <Setter Property="Margin" Value="0,1"/>
+                        <Setter Property="Margin" Value="0"/>
                         <Setter Property="Padding" Value="0"/>
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
@@ -104,7 +104,7 @@
                                 </Button.Content>
                             </Button>
                             <Border Grid.Row="1" 
-                                    BorderBrush="#ccc" 
+                                    BorderBrush="#ccc"
                                     BorderThickness="1,0,1,1">
                                 <StackPanel HorizontalAlignment="Right" 
                                             Orientation="Horizontal">
@@ -126,16 +126,7 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <!--<RichTextBox IsReadOnly="True" 
-                         Grid.Column="1"
-                         Margin="5,0,0,0"
-                         HorizontalAlignment="Stretch"
-                         VerticalAlignment="Stretch"
-                         Background="#eee"
-                         BorderThickness="0"
-                         Padding="10"
-                         helpers:RichTextBoxHelper.DocumentXaml="{Binding FullInfo}" />-->
-            <WebBrowser Grid.Column="1" Margin="5,0,0,0"
+            <WebBrowser Grid.Column="1" Margin="5,-30,0,0"
                         helpers:BrowserBehavior.Html="{Binding FullInfo}"/>
         </Grid>
     </Grid>

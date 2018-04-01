@@ -12,7 +12,7 @@ namespace GitHelper
 
         public string ShortDescription { get; private set; }
 
-        public IList<ActionFeatures> Features { get; private set; }
+        public IList<ExtensionFeatures> Features { get; private set; }
 
         public string FilePath { get; set; }
 
@@ -53,12 +53,12 @@ namespace GitHelper
 
             if (Features == null)
             {
-                Features = new List<ActionFeatures>();
+                Features = new List<ExtensionFeatures>();
             }
 
-            if (!Features.Contains(ActionFeatures.IsScript))
+            if (!Features.Contains(ExtensionFeatures.IsScript))
             {
-                Features.Add(ActionFeatures.IsScript);
+                Features.Add(ExtensionFeatures.IsScript);
             }
         }
 
