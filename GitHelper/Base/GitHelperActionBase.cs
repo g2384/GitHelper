@@ -21,9 +21,7 @@ namespace GitHelper.Base
             {
                 DataContext = Activator.CreateInstance(typeof(TViewModel), configuration)
             };
-            dialog.Owner = Application.Current.MainWindow;
-
-            dialog.ShowDialog();
+            Utility.ShowDialog(dialog);
         }
     }
 }

@@ -36,8 +36,7 @@ namespace GitHelper
                     switch (ext)
                     {
                         case ".bat":
-                            var lines = File.ReadAllLines(filePath);
-                            extension = new GitHelperScriptFile(lines, filePath);
+                            extension = new GitHelperScriptFile(filePath);
                             break;
                     }
 

@@ -26,49 +26,54 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid Margin="10">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" 
-                    Margin="0,0,0,10" 
+        <Border Grid.Row="0" 
+                BorderThickness="0,0,0,1"
+                BorderBrush="#DBDBDB" 
+               Background="#F9F9FA"
+                HorizontalAlignment="Stretch">
+        <StackPanel Margin="10,0,0,0"
                     Orientation="Horizontal">
             <Button Content="{StaticResource HomeIcon}" 
                     ToolTip="Home"
                     Style="{StaticResource MetroIconButton}"
-                    Width="47"  Height="35" 
+                    Width="70"  Height="50" Padding="7,15"
                     IsEnabled="{Binding TabIndex, Converter={StaticResource IntToBool}, ConverterParameter='1,2,3,4'}"
                     Command="{Binding OpenHomeCommand}"/>
             <Button  Content="{StaticResource RefreshIcon}" 
                     ToolTip="Refresh"
                     Style="{StaticResource MetroIconButton}"
-                    Width="47"  Height="35"
+                    Width="70"  Height="50" Padding="7,15"
                     Command="{Binding RefreshCommand}"/>
             <Button Content="{StaticResource ExtensionIcon}" 
                     ToolTip="Manage Extensions"
                     Style="{StaticResource MetroIconButton}"
-                    Width="47"  Height="35"
+                    Width="70"  Height="50" Padding="7,15"
                     IsEnabled="{Binding TabIndex, Converter={StaticResource IntToBool}, ConverterParameter='0,2,3,4'}"
                     Command="{Binding OpenManageExtensionCommand}"/>
             <Button Content="{StaticResource SettingsIcon}" 
                     ToolTip="Settings"
                     Style="{StaticResource MetroIconButton}"
-                    Width="47"  Height="35"
+                    Width="70"  Height="50" Padding="7,15"
                     IsEnabled="{Binding TabIndex, Converter={StaticResource IntToBool}, ConverterParameter='0,1,3,4'}"
                     Command="{Binding OpenSettingsCommand}"/>
             <Button Content="{StaticResource HelpIcon}" 
-                    ToolTip="Help"
+                    ToolTip="Help" Padding="7,15"
                     IsEnabled="{Binding TabIndex, Converter={StaticResource IntToBool}, ConverterParameter='0,1,2,3'}"
                     Style="{StaticResource MetroIconButton}"
-                    Width="47"  Height="35"/>
+                    Width="70"  Height="50"/>
         </StackPanel>
-        <Grid Grid.Row="1" Margin="0,5,0,0">
+        </Border>
+        <Grid Grid.Row="1" Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TabControl  Grid.Row="0"
-                         SelectedIndex="{Binding TabIndex, UpdateSourceTrigger=PropertyChanged}">
+            <TabControl Grid.Row="0"
+                        SelectedIndex="{Binding TabIndex, UpdateSourceTrigger=PropertyChanged}">
                 <TabItem>
                     <usercontrols:HomePage />
                 </TabItem>

@@ -8,6 +8,12 @@ namespace GitHelper
 {
     public static class Utility
     {
+        public static bool? ShowDialog(Window window)
+        {
+            window.Owner = Application.Current.MainWindow;
+            return window.ShowDialog();
+        }
+
         public static bool IsNullOrEmpty<T>(IList<T> formats)
         {
             return formats == null || formats.Count == 0;
@@ -26,10 +32,10 @@ namespace GitHelper
             return Uri.UnescapeDataString(pathToUnescape);
         }
 
-        internal static List<string> GetRelativePaths(List<string> selectedFilePaths, string folder)
+        internal static List<string> GetRelativePaths(List<string> filePaths, string folder)
         {
             var relativePaths = new List<string>();
-            foreach(var path in selectedFilePaths)
+            foreach(var path in filePaths)
             {
                 if (string.IsNullOrWhiteSpace(path))
                 {
@@ -58,6 +64,22 @@ namespace GitHelper
             }
 
             return text;
+        }
+
+        internal static List<string> GetAbsolutePaths(List<string> filePaths, string currentPath)
+        {
+            var absolutePaths = new List<string>();
+            foreach (var path in filePaths)
+            {
+                if (string.IsNullOrWhiteSpace(path))
+                {
+                    continue;
+                }
+
+                absolutePaths.Add(Path.Combine(currentPath, path));
+            }
+
+            return absolutePaths;
         }
     }
 }

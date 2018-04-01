@@ -85,7 +85,7 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <WebBrowser Grid.Column="1" 
-                    Margin="5,-25,0,0"
+                    Margin="5,-10,0,0"
                     helpers:BrowserBehavior.Html="{Binding FullInfo}"/>
     </Grid>
 </UserControl>

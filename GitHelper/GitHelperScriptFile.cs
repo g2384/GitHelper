@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 using GitHelper.Interfaces;
 
@@ -14,6 +15,8 @@ namespace GitHelper
 
         public IList<ExtensionFeatures> Features { get; private set; }
 
+        public string WorkingDirectory { get; private set; }
+
         public string FilePath { get; set; }
 
         /// <summary>
@@ -21,6 +24,11 @@ namespace GitHelper
         /// </summary>
         /// <param name="lines">.bat file contents</param>
         public GitHelperScriptFile(string[] lines, string filePath)
+        {
+            Init(lines, filePath);
+        }
+
+        private void Init(string[] lines, string filePath)
         {
             FilePath = filePath;
             var metaRegex = new Regex(@"\s*::\s*@(\w*)(.*)");
@@ -60,6 +68,17 @@ namespace GitHelper
             {
                 Features.Add(ExtensionFeatures.IsScript);
             }
+        }
+
+        public GitHelperScriptFile(string filePath)
+        {
+            var lines = File.ReadAllLines(filePath);
+            Init(lines, filePath);
+        }
+
+        public GitHelperScriptFile(string filePath, string workingDirectory) : this(filePath)
+        {
+            WorkingDirectory = workingDirectory;
         }
 
         public bool IsValid()

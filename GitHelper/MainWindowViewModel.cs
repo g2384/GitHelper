@@ -7,7 +7,9 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace GitHelper
@@ -141,10 +143,28 @@ namespace GitHelper
             var newExtensions = ExtensionViewModelHelper.GetExtensionFiles(Config.ExtensionPaths);
             foreach (var e in newExtensions)
             {
-                var extensionInfo = new ExtensionInfo(e);
+                var extensionInfo = new ExtensionInfo(e, ShowExtensionOutput);
                 extensions.Add(extensionInfo);
             }
         }
+
+        private void ShowExtensionOutput(string filePath)
+        {
+            var isOK = MessageBox.Show("Do you want to run this script" +
+                Environment.NewLine + "---------" + Environment.NewLine + File.ReadAllText(filePath),
+                "Run Script", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (isOK != MessageBoxResult.Yes)
+            {
+                return;
+            }
+            var viewModel = new ExtensionOutputViewModel(filePath);
+            ExtensionOutput extensionOutput = new ExtensionOutput()
+            {
+                DataContext = viewModel
+            };
+            Utility.ShowDialog(extensionOutput);
+        }
+
 
         private void AddPlugins(ObservableCollection<ExtensionInfo> extensions)
         {

@@ -86,6 +86,9 @@
       <HintPath>..\packages\MahApps.Metro.1.6.1\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+    </Reference>
     <Reference Include="MvvmCross.Binding, Version=5.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmCross.Binding.5.7.0\lib\net45\MvvmCross.Binding.dll</HintPath>
     </Reference>
@@ -120,8 +123,8 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
@@ -142,6 +145,7 @@
     <Compile Include="ExtensionViewModelHelper.cs" />
     <Compile Include="GitHelperScriptFile.cs" />
     <Compile Include="Helpers\BoolToVisibilityConverter.cs" />
+    <Compile Include="Helpers\ExecuteCommand.cs" />
     <Compile Include="Helpers\IntToBoolConverter.cs" />
     <Compile Include="Helpers\FileDialogService.cs" />
     <Compile Include="Helpers\GridViewSort.cs" />
@@ -151,6 +155,10 @@
     <Compile Include="Interfaces\IFileDialogService.cs" />
     <Compile Include="Interfaces\IGitHelperExtension.cs" />
     <Compile Include="Interfaces\IGitHelperExtensionFile.cs" />
+    <Compile Include="UserControls\ExtensionOutput.xaml.cs">
+      <DependentUpon>ExtensionOutput.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ExtensionOutputViewModel.cs" />
     <Compile Include="UserControls\ManageExtensionsPage.xaml.cs">
       <DependentUpon>ManageExtensionsPage.xaml</DependentUpon>
     </Compile>
@@ -162,6 +170,10 @@
       <DependentUpon>ManageBranches.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\StringExtensions.cs" />
+    <Page Include="UserControls\ExtensionOutput.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\ManageExtensionsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -196,9 +208,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BranchInfo.cs" />
-    <Compile Include="CommitExportFormat.cs" />
-    <Compile Include="CommitMessageType.cs" />
+    <Compile Include="Plugins\BranchInfo.cs" />
+    <Compile Include="Plugins\CommitExportFormat.cs" />
+    <Compile Include="Plugins\CommitMessageType.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Plugins\ExportCommitMessages.xaml.cs">
       <DependentUpon>ExportCommitMessages.xaml</DependentUpon>

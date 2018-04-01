@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using GitHelper.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 
@@ -20,6 +21,8 @@ namespace GitHelper
 
         public ICommand ExecuteCommand { get; private set; }
 
+        public string WorkingDirectory { get; set; }
+
         private IGitHelperActionMeta _actionMeta;
         private Configuration _config;
 
@@ -29,6 +32,8 @@ namespace GitHelper
 
         public bool HasNewWindow => Features.Contains(ExtensionFeatures.HasNewWindow);
 
+        private string _filePath;
+
         public ExtensionInfo(IGitHelperActionMeta actionMeta, Configuration config)
         {
             Name = actionMeta.Name;
@@ -37,18 +42,28 @@ namespace GitHelper
             Features = actionMeta.Features;
             _actionMeta = actionMeta;
             _config = config;
-            ExecuteCommand = new RelayCommand(Execute);
+            ExecuteCommand = new RelayCommand(ShowExtensionDialog);
         }
 
-        public ExtensionInfo(IGitHelperExtensionFile extensionFile)
+        public ExtensionInfo(IGitHelperExtensionFile extensionFile, Action<string> showDialog)
         {
             Name = extensionFile.Name;
             Description = extensionFile.Description;
             ShortDescription = extensionFile.ShortDescription;
             Features = extensionFile.Features;
+            _filePath = extensionFile.FilePath;
+            _showDialog = showDialog;
+            ExecuteCommand = new RelayCommand(RunFile);
         }
 
-        private void Execute()
+        private Action<string> _showDialog;
+
+        private void RunFile()
+        {
+            _showDialog(_filePath);
+        }
+
+        private void ShowExtensionDialog()
         {
             _actionMeta.ShowDialog(_config);
         }

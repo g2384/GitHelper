@@ -6,6 +6,7 @@ namespace GitHelper.Interfaces
     {
         string FilePath { get; }
         string ShortDescription { get; }
+        string WorkingDirectory { get; }
 
         bool IsValid();
         bool IsValid(out List<string> errors);

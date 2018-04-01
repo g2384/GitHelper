@@ -53,8 +53,17 @@ namespace GitHelper
             set
             {
                 _useRelativePath = value;
-                var relativePaths = Utility.GetRelativePaths(_selectedFilePaths, System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
-                SetSelectedPath(relativePaths);
+                var newPaths = new List<string>();
+                var currentPath = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
+                if (_useRelativePath)
+                {
+                    newPaths = Utility.GetRelativePaths(_selectedFilePaths, currentPath);
+                }
+                else
+                {
+                    newPaths = Utility.GetAbsolutePaths(_selectedFilePaths, currentPath);
+                }
+                SetSelectedPath(newPaths);
                 RaisePropertyChanged("SelectedPath");
                 RaisePropertyChanged("UseRelativePath");
             }
