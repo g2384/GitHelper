@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:helpers="clr-namespace:GitHelper.Helpers"
+        xmlns:usercontrols="clr-namespace:GitHelper.UserControls"
         xmlns:local="clr-namespace:GitHelper"
         mc:Ignorable="d"
         Title="Git Helper" 
@@ -13,7 +14,7 @@
         d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel, IsDesignTimeCreatable=True}">
     <Window.Resources>
         <ResourceDictionary>
-            <helpers:BoolToVisibilityConverter x:Key="CollapsedIfFalse" TriggerValue="False" IsHidden="False"/>
+            <helpers:IntToBoolConverter x:Key="IntToBool"/>
             <Image x:Key="HelpIcon" Source="/Images/Help.png"/>
             <Image x:Key="SettingsIcon" Source="/Images/Settings.png"/>
             <Image x:Key="ExtensionIcon" Source="/Images/Extension.png"/>
@@ -36,98 +37,48 @@
             <Button Content="{StaticResource HomeIcon}" 
                     ToolTip="Home"
                     Style="{StaticResource MetroIconButton}"
-                    Width="45" Height="32"
-                    Command="{Binding ShowHomeCommand}"/>
+                    Width="47"  Height="35" 
+                    IsEnabled="{Binding TabIndex, Converter={StaticResource IntToBool}, ConverterParameter='1,2,3,4'}"
+                    Command="{Binding OpenHomeCommand}"/>
             <Button  Content="{StaticResource RefreshIcon}" 
                     ToolTip="Refresh"
                     Style="{StaticResource MetroIconButton}"
-                    Width="45" Height="32"
+                    Width="47"  Height="35"
                     Command="{Binding RefreshCommand}"/>
             <Button Content="{StaticResource ExtensionIcon}" 
                     ToolTip="Manage Extensions"
                     Style="{StaticResource MetroIconButton}"
-                    Width="45" Height="32"
+                    Width="47"  Height="35"
+                    IsEnabled="{Binding TabIndex, Converter={StaticResource IntToBool}, ConverterParameter='0,2,3,4'}"
                     Command="{Binding OpenManageExtensionCommand}"/>
             <Button Content="{StaticResource SettingsIcon}" 
                     ToolTip="Settings"
                     Style="{StaticResource MetroIconButton}"
-                    Width="45" Height="32"
+                    Width="47"  Height="35"
+                    IsEnabled="{Binding TabIndex, Converter={StaticResource IntToBool}, ConverterParameter='0,1,3,4'}"
                     Command="{Binding OpenSettingsCommand}"/>
             <Button Content="{StaticResource HelpIcon}" 
                     ToolTip="Help"
+                    IsEnabled="{Binding TabIndex, Converter={StaticResource IntToBool}, ConverterParameter='0,1,2,3'}"
                     Style="{StaticResource MetroIconButton}"
-                    Width="45" Height="32"/>
+                    Width="47"  Height="35"/>
         </StackPanel>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <ListBox Grid.Column="0" 
-                     ItemsSource="{Binding Actions}"
-                     SelectedItem="{Binding SelectedAction}"
-                     Margin="0,0,5,0">
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
-                        <Setter Property="Margin" Value="0"/>
-                        <Setter Property="Padding" Value="0"/>
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="IsSelected" Value="True"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </ListBox.ItemContainerStyle>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Background="#fff" Width="300">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Button Grid.Row="0" 
-                                    Padding="0"
-                                    Height="50"
-                                    Style="{StaticResource MetroButton}"
-                                    Command="{Binding ExecuteCommand}">
-                                <Button.Content>
-                                    <TextBlock Grid.Row="0" 
-                                               Width="290"
-                                               Height="35"
-                                               HorizontalAlignment="Left"
-                                               Margin="5"
-                                               Padding="5"
-                                               Text="{Binding Name}"
-                                               FontSize="17"
-                                               FontWeight="Normal"
-                                               TextWrapping="NoWrap"/>
-                                </Button.Content>
-                            </Button>
-                            <Border Grid.Row="1" 
-                                    BorderBrush="#ccc"
-                                    BorderThickness="1,0,1,1">
-                                <StackPanel HorizontalAlignment="Right" 
-                                            Orientation="Horizontal">
-                                    <Image Source="/Images/Plugin.png" 
-                                           Width="16" Height="16" Margin="5,0,0,0"
-                                           Visibility="{Binding IsPlugin, Converter={StaticResource CollapsedIfFalse}}" 
-                                           ToolTip="This is a plug-in"/>
-                                    <Image Source="/Images/Script.png" 
-                                           Width="16" Height="16" Margin="5,0,0,0"
-                                           Visibility="{Binding IsScript, Converter={StaticResource CollapsedIfFalse}}" 
-                                           ToolTip="This is a script"/>
-                                    <Image Source="/Images/NewWindow.png" 
-                                           Width="16" Height="16" Margin="5,0,0,0"
-                                           Visibility="{Binding HasNewWindow, Converter={StaticResource CollapsedIfFalse}}" 
-                                           ToolTip="{x:Static local:ExtensionInfo.NewWindowToolTip}"/>
-                                </StackPanel>
-                            </Border>
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <WebBrowser Grid.Column="1" Margin="5,-30,0,0"
-                        helpers:BrowserBehavior.Html="{Binding FullInfo}"/>
+        <Grid Grid.Row="1" Margin="0,5,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TabControl  Grid.Row="0"
+                         SelectedIndex="{Binding TabIndex, UpdateSourceTrigger=PropertyChanged}">
+                <TabItem>
+                    <usercontrols:HomePage />
+                </TabItem>
+                <TabItem>
+                    <usercontrols:ManageExtensionsPage Grid.Row="0" DataContext="{Binding ManageExtensionsPageViewModel}"/>
+                </TabItem>
+                <TabItem>
+                    <usercontrols:SettingsPage Grid.Row="0" DataContext="{Binding SettingsPageViewModel}"/>
+                </TabItem>
+            </TabControl>
         </Grid>
     </Grid>
 </Window>

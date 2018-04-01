@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace GitHelper
 {
-    public class ManageExtensionsViewModel : ViewModelBase
+    public class ManageExtensionsPageViewModel : ViewModelBase
     {
         private ObservableCollection<IGitHelperExtensionFile> _extensions;
         public ObservableCollection<IGitHelperExtensionFile> Extensions
@@ -76,7 +76,7 @@ namespace GitHelper
 
         private Configuration _configuration;
 
-        public ManageExtensionsViewModel(Configuration configuration)
+        public ManageExtensionsPageViewModel(Configuration configuration)
         {
             _configuration = configuration;
             Extensions = new ObservableCollection<IGitHelperExtensionFile>(ExtensionViewModelHelper.GetExtensionFiles(configuration.ExtensionPaths));

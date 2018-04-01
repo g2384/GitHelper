@@ -1,8 +1,8 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GitHelper.Attributes;
-using GitHelper.Helpers;
 using GitHelper.Interfaces;
+using GitHelper.UserControls;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,14 @@ using System.Windows.Input;
 
 namespace GitHelper
 {
+    public enum MainWindowControlType
+    {
+        Home = 0,
+        ManageExtensions = 1,
+        Settings = 2,
+        Help = 3,
+    }
+
     public class MainWindowViewModel : ViewModelBase
     {
         private ObservableCollection<ExtensionInfo> _actions;
@@ -52,23 +60,70 @@ namespace GitHelper
             }
         }
 
+        private int _tabIndex;
+        public int TabIndex
+        {
+            get => _tabIndex;
+            set
+            {
+                _tabIndex = value;
+                if ((MainWindowControlType)_tabIndex == MainWindowControlType.Home)
+                {
+                    FullInfo = StartInfo();
+                }
+
+                RaisePropertyChanged("TabIndex");
+            }
+        }
+
         public ICommand OpenSettingsCommand { get; private set; }
 
         public ICommand OpenManageExtensionCommand { get; private set; }
 
         public ICommand RefreshCommand { get; private set; }
 
+        public ICommand OpenHomeCommand { get; private set; }
+
         public MainWindowViewModel()
         {
+            Config = Configuration.GetConfiguration();
+            ManageExtensionsPageViewModel = new ManageExtensionsPageViewModel(Config);
+            SettingsPageViewModel = new SettingsPageViewModel();
             DisplayHomeScreen();
-            OpenSettingsCommand = new RelayCommand(OpenSettings);
-            OpenManageExtensionCommand = new RelayCommand(OpenManageExtension);
+            OpenSettingsCommand = new RelayCommand(() => ShowTabItem(MainWindowControlType.Settings));
+            OpenManageExtensionCommand = new RelayCommand(() => ShowTabItem(MainWindowControlType.ManageExtensions));
             RefreshCommand = new RelayCommand(Refresh);
+            OpenHomeCommand = new RelayCommand(() => ShowTabItem(MainWindowControlType.Home));
+        }
+
+        private void ShowTabItem(MainWindowControlType controlType)
+        {
+            TabIndex = (int)controlType;
+        }
+
+        private ManageExtensionsPageViewModel _manageExtensionsPageViewModel;
+        public ManageExtensionsPageViewModel ManageExtensionsPageViewModel
+        {
+            get => _manageExtensionsPageViewModel; set
+            {
+                _manageExtensionsPageViewModel = value;
+                RaisePropertyChanged("ManageExtensionsPageViewModel");
+            }
+        }
+
+        public SettingsPageViewModel _settingsPageViewModel { get; private set; }
+        public SettingsPageViewModel SettingsPageViewModel
+        {
+            get => _settingsPageViewModel; set
+            {
+                _settingsPageViewModel = value;
+                RaisePropertyChanged("SettingsPageViewModel");
+            }
         }
 
         private void DisplayHomeScreen()
         {
-            Config = Configuration.GetConfiguration();
+            TabIndex = (int)MainWindowControlType.Home;
             var extensions = new ObservableCollection<ExtensionInfo>();
             AddPlugins(extensions);
             AddScripts(extensions);
@@ -100,16 +155,6 @@ namespace GitHelper
                 var extensionInfo = new ExtensionInfo(instance, Config);
                 extensions.Add(extensionInfo);
             }
-        }
-
-        private void OpenManageExtension()
-        {
-            WindowService.ShowWindow<ManageExtensions>(new ManageExtensionsViewModel(Config));
-        }
-
-        public void OpenSettings()
-        {
-            WindowService.ShowWindow<Settings>(new SettingsViewModel());
         }
 
         private void DisplayFullInfo()

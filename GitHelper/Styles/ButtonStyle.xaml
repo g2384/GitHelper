@@ -73,7 +73,7 @@
                         <Border
                                 x:Name="Border"
                                 Background="{TemplateBinding Background}"
-                                BorderBrush="#CCC"
+                                BorderBrush="#96BDFF"
                                 BorderThickness="{TemplateBinding BorderThickness}" />
                         <ContentPresenter
                                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -86,12 +86,11 @@
                             <Setter Property="OpacityMask" Value="#CC888888"/>
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="BorderThickness" Value="1"/>
                             <!--<Setter Property="Background" Value="DimGray"/>-->
                             <Setter Property="Background" Value="#EEE"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Foreground" Value="#ADADAD"/>
+                            <Setter Property="BorderThickness" Value="0,0,0,3"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
