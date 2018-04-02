@@ -2,7 +2,6 @@
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Windows.Input;
 
 namespace GitHelper.UserControls

@@ -1,7 +1,8 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using GitHelper.Attributes;
-using GitHelper.Interfaces;
+using GitHelper.Extension;
+using GitHelper.Extension.Attributes;
+using GitHelper.Extension.Interfaces;
 using GitHelper.UserControls;
 using NLog;
 using System;
