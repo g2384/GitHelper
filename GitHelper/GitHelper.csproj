@@ -276,6 +276,9 @@
   <ItemGroup>
     <Resource Include="HtmlPages\ExtensionInfo.html" />
   </ItemGroup>
+  <ItemGroup>
+    <SplashScreen Include="SplashScreen.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
