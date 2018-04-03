@@ -148,15 +148,24 @@
     <Compile Include="Interfaces\IFileDialogService.cs" />
     <Compile Include="Interfaces\IGitHelperExtension.cs" />
     <Compile Include="Interfaces\IGitHelperExtensionFile.cs" />
+    <Compile Include="UserControls\ExtensionInfoView.xaml.cs">
+      <DependentUpon>ExtensionInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ExtensionInfoViewModel.cs" />
     <Compile Include="UserControls\ExtensionOutput.xaml.cs">
       <DependentUpon>ExtensionOutput.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\ExtensionOutputViewModel.cs" />
+    <Compile Include="UserControls\HomePageViewModel.cs" />
     <Compile Include="UserControls\ManageExtensionsPage.xaml.cs">
       <DependentUpon>ManageExtensionsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\ManageExtensionsPageViewModel.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
+    <Page Include="UserControls\ExtensionInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\ExtensionOutput.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

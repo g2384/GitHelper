@@ -42,7 +42,7 @@
                     ToolTip="Home"
                     Style="{StaticResource MetroIconButton}"
                     Width="70"  Height="50" Padding="7,15"
-                    IsEnabled="{Binding TabIndex, Converter={StaticResource IntToBool}, ConverterParameter='1,2,3,4'}"
+                    IsEnabled="{Binding DisabledButton, Converter={StaticResource IntToBool}, ConverterParameter='1,2,3,4'}"
                     Command="{Binding OpenHomeCommand}"/>
             <Button  Content="{StaticResource RefreshIcon}" 
                     ToolTip="Refresh"
@@ -53,17 +53,17 @@
                     ToolTip="Manage Extensions"
                     Style="{StaticResource MetroIconButton}"
                     Width="70"  Height="50" Padding="7,15"
-                    IsEnabled="{Binding TabIndex, Converter={StaticResource IntToBool}, ConverterParameter='0,2,3,4'}"
+                    IsEnabled="{Binding DisabledButton, Converter={StaticResource IntToBool}, ConverterParameter='0,2,3,4'}"
                     Command="{Binding OpenManageExtensionCommand}"/>
             <Button Content="{StaticResource SettingsIcon}" 
                     ToolTip="Settings"
                     Style="{StaticResource MetroIconButton}"
                     Width="70"  Height="50" Padding="7,15"
-                    IsEnabled="{Binding TabIndex, Converter={StaticResource IntToBool}, ConverterParameter='0,1,3,4'}"
+                    IsEnabled="{Binding DisabledButton, Converter={StaticResource IntToBool}, ConverterParameter='0,1,3,4'}"
                     Command="{Binding OpenSettingsCommand}"/>
             <Button Content="{StaticResource HelpIcon}" 
                     ToolTip="Help" Padding="7,15"
-                    IsEnabled="{Binding TabIndex, Converter={StaticResource IntToBool}, ConverterParameter='0,1,2,3'}"
+                    IsEnabled="{Binding DisabledButton, Converter={StaticResource IntToBool}, ConverterParameter='0,1,2,3'}"
                     Style="{StaticResource MetroIconButton}"
                     Width="70"  Height="50"/>
         </StackPanel>
@@ -75,13 +75,10 @@
             <TabControl Grid.Row="0"
                         SelectedIndex="{Binding TabIndex, UpdateSourceTrigger=PropertyChanged}">
                 <TabItem>
-                    <usercontrols:HomePage />
+                    <usercontrols:HomePage DataContext="{Binding HomePageViewModel}"/>
                 </TabItem>
                 <TabItem>
-                    <usercontrols:ManageExtensionsPage Grid.Row="0" DataContext="{Binding ManageExtensionsPageViewModel}"/>
-                </TabItem>
-                <TabItem>
-                    <usercontrols:SettingsPage Grid.Row="0" DataContext="{Binding SettingsPageViewModel}"/>
+                    <usercontrols:SettingsPage  DataContext="{Binding SettingsPageViewModel}"/>
                 </TabItem>
             </TabControl>
         </Grid>

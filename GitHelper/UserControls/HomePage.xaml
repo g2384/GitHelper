@@ -18,7 +18,7 @@
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="300"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <ListBox Grid.Column="0" 
@@ -84,8 +84,14 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <WebBrowser Grid.Column="1" 
-                    Margin="5,-10,0,0"
-                    helpers:BrowserBehavior.Html="{Binding FullInfo}"/>
+        <TabControl Grid.Column="1"
+                    SelectedIndex="{Binding TabIndex, UpdateSourceTrigger=PropertyChanged}">
+            <TabItem>
+                <local:ExtensionInfoView DataContext="{Binding ExtensionInfoViewModel}"/>
+            </TabItem>
+            <TabItem>
+                <local:ManageExtensionsPage DataContext="{Binding ManageExtensionsPageViewModel}"/>
+            </TabItem>
+        </TabControl>
     </Grid>
 </UserControl>

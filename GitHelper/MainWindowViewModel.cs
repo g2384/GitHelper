@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GitHelper.Extension;
 using GitHelper.Extension.Attributes;
@@ -18,21 +18,40 @@ namespace GitHelper
     public enum MainWindowControlType
     {
         Home = 0,
+        Settings = 1,
+        Help = 2,
+    }
+
+    public enum MainWindowDisabledButton
+    {
+        Home = 0,
         ManageExtensions = 1,
         Settings = 2,
-        Help = 3,
+        Help = 3
     }
 
     public class MainWindowViewModel : ViewModelBase
     {
-        private ObservableCollection<ExtensionInfo> _actions;
-        public ObservableCollection<ExtensionInfo> Actions
+        private ObservableCollection<ExtensionInfo> _extensions;
+        public ObservableCollection<ExtensionInfo> Extensions
         {
-            get => _actions;
+            get => _extensions;
             set
             {
-                _actions = value;
-                RaisePropertyChanged("Actions");
+                _extensions = value;
+                RaisePropertyChanged(nameof(Extensions));
+            }
+        }
+
+        private int _disabledButton;
+
+        public int DisabledButton
+        {
+            get => _disabledButton;
+            set
+            {
+                _disabledButton = value;
+                RaisePropertyChanged(nameof(DisabledButton));
             }
         }
 
@@ -43,7 +62,7 @@ namespace GitHelper
             set
             {
                 _selectedAction = value;
-                DisplayFullInfo();
+                HomePageViewModel.ShowExtensionInfo(_selectedAction);
                 RaisePropertyChanged("SelectedAction");
             }
         }
@@ -52,17 +71,6 @@ namespace GitHelper
 
         private static Logger _log = LogManager.GetCurrentClassLogger();
 
-        private string _fullInfo;
-        public string FullInfo
-        {
-            get => _fullInfo;
-            set
-            {
-                _fullInfo = value;
-                RaisePropertyChanged("FullInfo");
-            }
-        }
-
         private int _tabIndex;
         public int TabIndex
         {
@@ -70,9 +78,25 @@ namespace GitHelper
             set
             {
                 _tabIndex = value;
+                var controlType = (MainWindowControlType)_tabIndex;
                 if ((MainWindowControlType)_tabIndex == MainWindowControlType.Home)
                 {
-                    FullInfo = StartInfo();
+                    HomePageViewModel.ShowTabItem(HomePageViewType.Info);
+                }
+
+                switch (controlType)
+                {
+                    case MainWindowControlType.Home:
+
+                        break;
+                    case MainWindowControlType.Settings:
+                        DisabledButton = (int)MainWindowDisabledButton.Settings;
+                        break;
+                    case MainWindowControlType.Help:
+                        DisabledButton = (int)MainWindowDisabledButton.Help;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
 
                 RaisePropertyChanged("TabIndex");
@@ -87,16 +111,33 @@ namespace GitHelper
 
         public ICommand OpenHomeCommand { get; private set; }
 
+        public HomePageViewModel HomePageViewModel { get; private set; }
+
         public MainWindowViewModel()
         {
             Config = Configuration.GetConfiguration();
             ManageExtensionsPageViewModel = new ManageExtensionsPageViewModel(Config);
             SettingsPageViewModel = new SettingsPageViewModel();
+            HomePageViewModel = new HomePageViewModel(Config);
             DisplayHomeScreen();
             OpenSettingsCommand = new RelayCommand(() => ShowTabItem(MainWindowControlType.Settings));
-            OpenManageExtensionCommand = new RelayCommand(() => ShowTabItem(MainWindowControlType.ManageExtensions));
+            OpenManageExtensionCommand = new RelayCommand(() => ShowManageExtension(HomePageViewType.Settings));
             RefreshCommand = new RelayCommand(Refresh);
-            OpenHomeCommand = new RelayCommand(() => ShowTabItem(MainWindowControlType.Home));
+            OpenHomeCommand = new RelayCommand(() => ShowManageExtension(HomePageViewType.Info));
+        }
+
+        private void ShowManageExtension(HomePageViewType viewType)
+        {
+            HomePageViewModel.ShowTabItem(viewType);
+            switch (viewType)
+            {
+                case HomePageViewType.Info:
+                    DisabledButton = (int)MainWindowDisabledButton.Home;
+                    break;
+                case HomePageViewType.Settings:
+                    DisabledButton = (int)MainWindowDisabledButton.ManageExtensions;
+                    break;
+            }
         }
 
         private void ShowTabItem(MainWindowControlType controlType)
@@ -114,7 +155,7 @@ namespace GitHelper
             }
         }
 
-        public SettingsPageViewModel _settingsPageViewModel { get; private set; }
+        private SettingsPageViewModel _settingsPageViewModel;
         public SettingsPageViewModel SettingsPageViewModel
         {
             get => _settingsPageViewModel; set
@@ -130,8 +171,8 @@ namespace GitHelper
             var extensions = new ObservableCollection<ExtensionInfo>();
             AddPlugins(extensions);
             AddScripts(extensions);
-            FullInfo = StartInfo();
-            Actions = new ObservableCollection<ExtensionInfo>(extensions.OrderBy(a => a.Name));
+            HomePageViewModel.ShowStartInfo();
+            Extensions = new ObservableCollection<ExtensionInfo>(extensions.OrderBy(a => a.Name));
         }
 
         private void Refresh()
@@ -178,15 +219,7 @@ namespace GitHelper
             }
         }
 
-        private void DisplayFullInfo()
-        {
-            if (SelectedAction == null)
-            {
-                return;
-            }
 
-            FullInfo = SelectedAction.GetFullInfo();
-        }
 
         IEnumerable<Type> GetTypesWith<TAttribute>(bool inherit)
                               where TAttribute : Attribute
@@ -197,9 +230,6 @@ namespace GitHelper
                    select t;
         }
 
-        private string StartInfo()
-        {
-            return Utility.GetResourceText("pack://application:,,,/HtmlPages/StartPage.html");
-        }
+
     }
 }
