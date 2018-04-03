@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ExportCommitMessages
+namespace GitHelper.Extension
 {
     public class Utility
     {

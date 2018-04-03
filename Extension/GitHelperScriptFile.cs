@@ -2,9 +2,10 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using GitHelper.Extension;
+using GitHelper.Extension.Helpers;
 using GitHelper.Extension.Interfaces;
 
-namespace GitHelper.Extension
+namespace GitHelper
 {
     public class GitHelperScriptFile : IGitHelperExtensionFile
     {

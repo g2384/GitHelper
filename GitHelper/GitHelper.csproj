@@ -146,8 +146,6 @@
     <Compile Include="Helpers\BrowserBehavior.cs" />
     <Compile Include="Helpers\WindowService.cs" />
     <Compile Include="Interfaces\IFileDialogService.cs" />
-    <Compile Include="Interfaces\IGitHelperExtension.cs" />
-    <Compile Include="Interfaces\IGitHelperExtensionFile.cs" />
     <Compile Include="UserControls\ExtensionInfoView.xaml.cs">
       <DependentUpon>ExtensionInfoView.xaml</DependentUpon>
     </Compile>

@@ -138,13 +138,13 @@ namespace ExportCommitMessages
         private void LoadBranches()
         {
             var selectedIndex = 0;
-            if (!Utility.IsNullOrEmpty(BranchNames))
+            if (!GitHelper.Extension.Utility.IsNullOrEmpty(BranchNames))
             {
                 selectedIndex = BranchNames.IndexOf(SelectedBranchName);
             }
 
             BranchNames = GetBranches(RepoPath)?.Select(e => e.Name)?.ToList();
-            if (Utility.IsNullOrEmpty(BranchNames))
+            if (GitHelper.Extension.Utility.IsNullOrEmpty(BranchNames))
             {
                 return;
             }
@@ -185,7 +185,7 @@ namespace ExportCommitMessages
 
         private void Export(string branchName, List<CommitExportFormat> formats, DateTime? startDate, DateTime? endDate)
         {
-            if (Utility.IsNullOrEmpty(formats))
+            if (GitHelper.Extension.Utility.IsNullOrEmpty(formats))
             {
                 MessageBox.Show("please specify a valid format.");
                 return;

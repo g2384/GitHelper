@@ -1,7 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using GitHelper.Extension;
 using GitHelper.Extension.Interfaces;
-using GitHelper.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;

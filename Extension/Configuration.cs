@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using GitHelper.Extension.Interfaces;
 using Newtonsoft.Json;
 
 namespace GitHelper.Extension
@@ -23,7 +24,7 @@ namespace GitHelper.Extension
 
         public bool ShowWarningBeforeExecutingScript { get; set; } = true;
 
-        public List<string> ExtensionPaths { get; set; } = new List<string>();
+        public List<IGitHelperExtensionFile> Extensions { get; set; } = new List<IGitHelperExtensionFile>();
 
         [JsonIgnore]
         public string IgnoredBranchesString
@@ -46,7 +47,11 @@ namespace GitHelper.Extension
             {
                 try
                 {
-                    return JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(ConfigFile));
+                    var configuration = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(ConfigFile));
+                    if(configuration.Extensions == null)
+                    {
+                        configuration.Extensions = new List<IGitHelperExtensionFile>();
+                    }
                 }
                 catch
                 { }

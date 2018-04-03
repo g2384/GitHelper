@@ -1,4 +1,4 @@
-﻿using GitHelper.Interfaces;
+﻿using GitHelper.Extension.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;

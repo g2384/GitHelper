@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GitHelper.Interfaces
+namespace GitHelper.Extension.Interfaces
 {
     public interface IGitHelperExtensionFile:IGitHelperExtension
     {

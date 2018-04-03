@@ -1,36 +1,35 @@
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GitHelper.Extension;
+using GitHelper.Extension.Interfaces;
 using GitHelper.Helpers;
-using GitHelper.Interfaces;
 
 namespace GitHelper.UserControls
 {
+    public class ManageExtensionEventArgs : EventArgs
+    {
+        public List<IGitHelperExtensionFile> ExtensionFiles { get; }
+        public ManageExtensionEventArgs(List<IGitHelperExtensionFile> extensionFiles)
+        {
+            ExtensionFiles = extensionFiles;
+        }
+    }
+
     public class ManageExtensionsPageViewModel : ViewModelBase
     {
-        private ObservableCollection<IGitHelperExtensionFile> _extensions;
-        public ObservableCollection<IGitHelperExtensionFile> Extensions
+        private IGitHelperExtensionFile _extension;
+        public IGitHelperExtensionFile Extension
         {
-            get => _extensions;
+            get => _extension;
             set
             {
-                _extensions = value;
-                RaisePropertyChanged("Extensions");
-            }
-        }
-
-        private IGitHelperExtensionFile _selectedExtensions;
-        public IGitHelperExtensionFile SelectedExtension
-        {
-            get => _selectedExtensions;
-            set
-            {
-                _selectedExtensions = value;
-                RaisePropertyChanged("SelectedExtension");
+                _extension = value;
+                ExtensionName = Extension.Name;
+                RaisePropertyChanged(nameof(Extension));
                 RaisePropertyChanged("CanDelete");
             }
         }
@@ -44,6 +43,17 @@ namespace GitHelper.UserControls
                 _selectedPath = value;
                 RaisePropertyChanged("SelectedPath");
                 RaisePropertyChanged("CanAdd");
+            }
+        }
+
+        private string _extensionName;
+        public string ExtensionName
+        {
+            get => _extensionName;
+            set
+            {
+                _extensionName = value;
+                RaisePropertyChanged(nameof(ExtensionName));
             }
         }
 
@@ -70,7 +80,7 @@ namespace GitHelper.UserControls
             }
         }
 
-        public bool CanDelete => SelectedExtension != null;
+        public bool CanDelete => Extension != null;
 
         public bool CanAdd => !string.IsNullOrWhiteSpace(SelectedPath);
 
@@ -89,7 +99,6 @@ namespace GitHelper.UserControls
         public ManageExtensionsPageViewModel(Configuration configuration)
         {
             _configuration = configuration;
-            Extensions = new ObservableCollection<IGitHelperExtensionFile>(ExtensionViewModelHelper.GetExtensionFiles(configuration.ExtensionPaths));
             OpenFileCommand = new RelayCommand(OpenFile);
             AddScriptCommand = new RelayCommand(AddScript);
             DeleteExtensionCommand = new RelayCommand(DeleteExtension);
@@ -98,47 +107,33 @@ namespace GitHelper.UserControls
 
         private void Save()
         {
-            var paths = Extensions.Select(e => e.FilePath).ToList();
-            _configuration.ExtensionPaths = paths;
             _configuration.Save();
         }
 
         private void DeleteExtension()
         {
-            if (SelectedExtension == null)
+            if (Extension == null)
             {
                 return;
             }
 
-            var index = Extensions.IndexOf(SelectedExtension);
-            Extensions.Remove(SelectedExtension);
-
-            if (index < 0)
-            {
-                index = 0;
-            }
-
-            if (index >= Extensions.Count)
-            {
-                index = Extensions.Count - 1;
-            }
-
-            if (index >= 0)
-            {
-                SelectedExtension = Extensions[index];
-            }
+            _configuration.Extensions.Remove(Extension);
+            var extensionArgs = new ManageExtensionEventArgs(new List<IGitHelperExtensionFile>() { Extension });
+            OnDeleteExtension?.Invoke(this, extensionArgs);
+            Extension = null;
         }
+
+        public event EventHandler<ManageExtensionEventArgs> OnDeleteExtension;
+        public event EventHandler<ManageExtensionEventArgs> OnAddExtension;
 
         private void AddScript()
         {
-            var extensions = ExtensionViewModelHelper.GetExtensionFiles(_selectedFilePaths, true);
-            foreach (var e in extensions)
-            {
-                Extensions.Add(e);
-            }
-
+            var extensionFiles = ExtensionViewModelHelper.GetExtensionFiles(_selectedFilePaths, true);
+            _configuration.Extensions.AddRange(extensionFiles);
             _selectedFilePaths = new List<string>();
             SelectedPath = null;
+            var extensionArgs = new ManageExtensionEventArgs(extensionFiles);
+            OnAddExtension?.Invoke(this, extensionArgs);
         }
 
         private void OpenFile()

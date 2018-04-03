@@ -18,12 +18,12 @@
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <ListBox Grid.Column="0" 
-                     ItemsSource="{Binding Actions}"
-                     SelectedItem="{Binding SelectedAction}"
+                     ItemsSource="{Binding Extensions}"
+                     SelectedItem="{Binding SelectedExtension}"
                      Margin="0,0,5,0">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
@@ -32,6 +32,9 @@
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="IsSelected" Value="True"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Opacity" Value="0.5"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>
