@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using GitHelper.Extension.Interfaces;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace GitHelper.Extension
 {
@@ -47,13 +50,22 @@ namespace GitHelper.Extension
             {
                 try
                 {
-                    var configuration = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(ConfigFile));
-                    if(configuration.Extensions == null)
+                    var se = new JsonSerializerSettings()
+                    {
+                        TypeNameHandling = TypeNameHandling.Auto,
+                    };
+                    se.Converters.Add(new CogConverter());
+                    var configuration = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(ConfigFile),
+                        se);
+
+                    if (configuration.Extensions == null)
                     {
                         configuration.Extensions = new List<IGitHelperExtensionFile>();
                     }
+
+                    return configuration;
                 }
-                catch
+                catch (Exception e)
                 { }
             }
 
@@ -65,4 +77,27 @@ namespace GitHelper.Extension
             File.WriteAllText(ConfigFile, JsonConvert.SerializeObject(this, Formatting.Indented));
         }
     }
+
+    public class CogConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(IGitHelperExtensionFile);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            var target = serializer.Deserialize<Newtonsoft.Json.Linq.JObject>(reader);
+            var fileInfo = new GitHelperScriptFile(target["Name"].ToString(), target["Description"].ToString(),
+                target["FilePath"].ToString(), target["WorkingDirectory"].ToString());
+            //serializer.Populate(target.CreateReader(), target);
+            return fileInfo;
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            serializer.Serialize(writer, value);
+        }
+    }
+
 }

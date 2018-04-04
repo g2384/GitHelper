@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using JsonSubTypes;
+using Newtonsoft.Json;
 
 namespace GitHelper.Extension.Interfaces
 {

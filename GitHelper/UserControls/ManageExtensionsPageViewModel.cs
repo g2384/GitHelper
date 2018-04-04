@@ -28,16 +28,18 @@ namespace GitHelper.UserControls
             set
             {
                 _extension = value;
-                ExtensionName = Extension.Name;
+                ExtensionName = _extension.Name;
+                ExtensionDescription = _extension.Description;
+                WorkingDirectory = _extension.WorkingDirectory;
                 RaisePropertyChanged(nameof(Extension));
-                RaisePropertyChanged("CanDelete");
+                DeleteExtensionCommand.RaiseCanExecuteChanged();
             }
         }
 
         private string _selectedPath;
         public string SelectedPath
         {
-            get { return _selectedPath; }
+            get => _selectedPath;
             set
             {
                 _selectedPath = value;
@@ -54,6 +56,30 @@ namespace GitHelper.UserControls
             {
                 _extensionName = value;
                 RaisePropertyChanged(nameof(ExtensionName));
+            }
+        }
+
+        private string _extensionDescription;
+
+        public string ExtensionDescription
+        {
+            get => _extensionDescription;
+            set
+            {
+                _extensionDescription = value;
+                RaisePropertyChanged(nameof(ExtensionDescription));
+            }
+        }
+
+        private string _workingDirectory;
+
+        public string WorkingDirectory
+        {
+            get => _workingDirectory;
+            set
+            {
+                _workingDirectory = value;
+                RaisePropertyChanged(nameof(WorkingDirectory));
             }
         }
 
@@ -80,19 +106,17 @@ namespace GitHelper.UserControls
             }
         }
 
-        public bool CanDelete => Extension != null;
-
         public bool CanAdd => !string.IsNullOrWhiteSpace(SelectedPath);
 
         private List<string> _selectedFilePaths;
 
-        public ICommand OpenFileCommand { get; private set; }
+        public ICommand OpenFileCommand { get; }
 
-        public ICommand AddScriptCommand { get; private set; }
+        public ICommand AddScriptCommand { get; }
 
-        public ICommand DeleteExtensionCommand { get; private set; }
+        public RelayCommand DeleteExtensionCommand { get; }
 
-        public ICommand SaveCommand { get; private set; }
+        public ICommand SaveCommand { get; }
 
         private Configuration _configuration;
 
@@ -101,7 +125,7 @@ namespace GitHelper.UserControls
             _configuration = configuration;
             OpenFileCommand = new RelayCommand(OpenFile);
             AddScriptCommand = new RelayCommand(AddScript);
-            DeleteExtensionCommand = new RelayCommand(DeleteExtension);
+            DeleteExtensionCommand = new RelayCommand(DeleteExtension, () => Extension != null);
             SaveCommand = new RelayCommand(Save);
         }
 

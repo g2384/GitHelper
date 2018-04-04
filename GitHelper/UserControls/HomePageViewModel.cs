@@ -19,7 +19,7 @@ namespace GitHelper.UserControls
 
     public class HomePageViewModel : ViewModelBase
     {
-        public ExtensionInfoViewModel ExtensionInfoViewModel { get; private set; }
+        public ExtensionInfoViewModel ExtensionInfoViewModel { get; }
         
         private ManageExtensionsPageViewModel _manageExtensionsPageViewModel;
         public ManageExtensionsPageViewModel ManageExtensionsPageViewModel
@@ -133,6 +133,11 @@ namespace GitHelper.UserControls
 
         private void ShowExtensionOutput(string filePath)
         {
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                throw new ArgumentNullException(nameof(filePath));
+            }
+
             if((HomePageViewType)TabIndex == HomePageViewType.Settings)
             {
                 ManageExtensionsPageViewModel.Extension = new GitHelperScriptFile(filePath);

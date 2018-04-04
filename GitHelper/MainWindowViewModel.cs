@@ -72,15 +72,15 @@ namespace GitHelper
             }
         }
 
-        public ICommand OpenSettingsCommand { get; private set; }
+        public ICommand OpenSettingsCommand { get; }
 
-        public ICommand OpenManageExtensionCommand { get; private set; }
+        public ICommand OpenManageExtensionCommand { get; }
 
-        public ICommand RefreshCommand { get; private set; }
+        public ICommand RefreshCommand { get; }
 
-        public ICommand OpenHomeCommand { get; private set; }
+        public ICommand OpenHomeCommand { get; }
 
-        public HomePageViewModel HomePageViewModel { get; private set; }
+        public HomePageViewModel HomePageViewModel { get; }
 
         public MainWindowViewModel()
         {

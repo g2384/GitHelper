@@ -72,13 +72,14 @@
                            Style="{StaticResource LabelText}"
                            Content="Description"/>
             <TextBox Grid.Row="3" Grid.Column="1" 
-                             MinLines="4" MaxLines="500"
-                             Margin="0, 2" Padding="2, 5" 
-                             TextWrapping="NoWrap" 
-                             AcceptsReturn="True"
-                             ScrollViewer.CanContentScroll="True" 
-                             VerticalScrollBarVisibility="Auto"
-                             HorizontalScrollBarVisibility="Auto"/>
+                     MinLines="4" MaxLines="500"
+                     Margin="0, 2" Padding="2, 5"
+                     Text="{Binding ExtensionDescription}"
+                     TextWrapping="NoWrap" 
+                     AcceptsReturn="True"
+                     ScrollViewer.CanContentScroll="True" 
+                     VerticalScrollBarVisibility="Auto"
+                     HorizontalScrollBarVisibility="Auto"/>
             <Label Grid.Row="4" Grid.Column="0" 
                            Style="{StaticResource LabelText}"
                            Padding="2,0"
@@ -91,7 +92,6 @@
                     Width="50"
                     Margin="0,5,0,0"
                     HorizontalAlignment="Left"
-                    IsEnabled="{Binding CanDelete}"
                     Command="{Binding DeleteExtensionCommand}"/>
             <Button Grid.Row="5" Grid.Column="1"
                     Content="Save"

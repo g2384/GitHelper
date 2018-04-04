@@ -12,7 +12,7 @@ namespace GitHelper.Helpers
         private bool triggerValue = false;
         public bool TriggerValue
         {
-            get { return triggerValue; }
+            get => triggerValue;
             set { triggerValue = value; }
         }
         //Set to true if you just want to hide the control
@@ -20,7 +20,7 @@ namespace GitHelper.Helpers
         private bool isHidden;
         public bool IsHidden
         {
-            get { return isHidden; }
+            get => isHidden;
             set { isHidden = value; }
         }
 

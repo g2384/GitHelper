@@ -11,7 +11,7 @@ namespace GitHelper.UserControls
         private string _output;
         private string _filePath;
 
-        public ICommand RunCommand { get; private set; }
+        public ICommand RunCommand { get; }
 
         public ExtensionOutputViewModel(string filePath)
         {

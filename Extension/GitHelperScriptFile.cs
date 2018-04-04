@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using GitHelper.Extension;
@@ -17,7 +17,7 @@ namespace GitHelper
 
         public IList<ExtensionFeatures> Features { get; private set; }
 
-        public string WorkingDirectory { get; private set; }
+        public string WorkingDirectory { get; }
 
         public string FilePath { get; set; }
 
@@ -81,6 +81,14 @@ namespace GitHelper
         public GitHelperScriptFile(string filePath, string workingDirectory) : this(filePath)
         {
             WorkingDirectory = workingDirectory;
+        }
+
+        public GitHelperScriptFile(string name, string description, string filePath, string workingDirectory)
+        {
+            Name = name;
+            Description = description;
+            WorkingDirectory = workingDirectory;
+            FilePath = filePath;
         }
 
         public bool IsValid()

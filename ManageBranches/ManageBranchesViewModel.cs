@@ -23,8 +23,8 @@ namespace ManageBranches
 
         private static Logger _log = LogManager.GetCurrentClassLogger();
 
-        public ICommand DeleteBranchCommand { get; private set; }
-        public ICommand LoadBranchCommand { get; private set; }
+        public ICommand DeleteBranchCommand { get; }
+        public ICommand LoadBranchCommand { get; }
 
         private string _repo;
         public string Repo

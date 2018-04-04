@@ -17,12 +17,12 @@ namespace ExportCommitMessages
         public const string CommitOutputFile = "commits.txt";
         public GitHelper.Extension.Configuration Configuration { get; set; }
         public List<CommitExportFormat> Formats { get; set; }
-        public ICommand ExportCommand { get; private set; }
+        public ICommand ExportCommand { get; }
 
         private DateTime? _startDate;
         public DateTime? StartDate
         {
-            get { return _startDate; }
+            get => _startDate;
             set
             {
                 _startDate = value;
@@ -33,7 +33,7 @@ namespace ExportCommitMessages
         private DateTime? _endDate;
         public DateTime? EndDate
         {
-            get { return _endDate; }
+            get => _endDate;
             set
             {
                 _endDate = value;
@@ -44,7 +44,7 @@ namespace ExportCommitMessages
         private string _keywords;
         public string Keywords
         {
-            get { return _keywords; }
+            get => _keywords;
             set
             {
                 _keywords = value;
@@ -55,7 +55,7 @@ namespace ExportCommitMessages
         private string _example;
         public string Example
         {
-            get { return _example; }
+            get => _example;
             set
             {
                 _example = value;
@@ -67,7 +67,7 @@ namespace ExportCommitMessages
         private string _format;
         public string Format
         {
-            get { return _format; }
+            get => _format;
             set
             {
                 _format = value;
@@ -111,7 +111,7 @@ namespace ExportCommitMessages
             }
         }
 
-        public ICommand LoadBranchCommand { get; private set; }
+        public ICommand LoadBranchCommand { get; }
 
         public ExportCommitMessageViewModel()
         {

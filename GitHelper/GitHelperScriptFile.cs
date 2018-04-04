@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using GitHelper.Extension;
@@ -16,7 +16,7 @@ namespace GitHelper.Extension
 
         public IList<ExtensionFeatures> Features { get; private set; }
 
-        public string WorkingDirectory { get; private set; }
+        public string WorkingDirectory { get; }
 
         public string FilePath { get; set; }
 

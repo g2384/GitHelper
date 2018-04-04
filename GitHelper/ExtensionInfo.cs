@@ -20,7 +20,7 @@ namespace GitHelper
 
         public IList<ExtensionFeatures> Features { get; set; }
 
-        public ICommand ExecuteCommand { get; private set; }
+        public ICommand ExecuteCommand { get; }
 
         public string WorkingDirectory { get; set; }
 
