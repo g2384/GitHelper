@@ -1,18 +1,19 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using GitHelper.Extension;
 using GitHelper.Extension.Helpers;
 using GitHelper.Extension.Interfaces;
+using Newtonsoft.Json;
 
-namespace GitHelper
+namespace GitHelper.Extension
 {
-    public class GitHelperScriptFile : IGitHelperExtensionFile
+    public class GitHelperScriptFile : IGitHelperExtensionFile, IJsonTypeConvertible<IGitHelperExtensionFile>
     {
         public string Name { get; private set; }
 
         public string Description { get; private set; }
 
+        [JsonIgnore]
         public string ShortDescription { get; private set; }
 
         public IList<ExtensionFeatures> Features { get; private set; }
@@ -21,10 +22,14 @@ namespace GitHelper
 
         public string FilePath { get; set; }
 
+        public GitHelperScriptFile()
+        { }
+
         /// <summary>
         /// Extract extension info from .bat file
         /// </summary>
         /// <param name="lines">.bat file contents</param>
+        /// <param name="filePath"></param>
         public GitHelperScriptFile(string[] lines, string filePath)
         {
             Init(lines, filePath);
@@ -91,6 +96,12 @@ namespace GitHelper
             FilePath = filePath;
         }
 
+        public void ToRelatvePath()
+        {
+            var currentPath = FilePathHelper.GetCurrentDirectory();
+            FilePath = FilePathHelper.GetRelativePath(FilePath, currentPath);
+        }
+
         public bool IsValid()
         {
             return IsValid(out var errors);
@@ -106,5 +117,16 @@ namespace GitHelper
 
             return Utility.IsNullOrEmpty(errors);
         }
+
+        public IGitHelperExtensionFile ConvertTo(Newtonsoft.Json.Linq.JObject obj)
+        {
+            return new GitHelperScriptFile(obj["Name"].ToString(), obj["Description"].ToString(),
+                obj["FilePath"].ToString(), obj["WorkingDirectory"].ToString());
+        }
+    }
+
+    public interface IJsonTypeConvertible<T>
+    {
+        T ConvertTo(Newtonsoft.Json.Linq.JObject obj);
     }
 }

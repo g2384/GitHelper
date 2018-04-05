@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using JsonSubTypes;
-using Newtonsoft.Json;
 
 namespace GitHelper.Extension.Interfaces
 {
@@ -12,5 +10,6 @@ namespace GitHelper.Extension.Interfaces
 
         bool IsValid();
         bool IsValid(out List<string> errors);
+        void ToRelatvePath();
     }
 }

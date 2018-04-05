@@ -2,11 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using GitHelper.Extension.Interfaces;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json.Linq;
 
 namespace GitHelper.Extension
 {
@@ -54,7 +53,7 @@ namespace GitHelper.Extension
                     {
                         TypeNameHandling = TypeNameHandling.Auto,
                     };
-                    se.Converters.Add(new CogConverter());
+                    se.Converters.Add(new JsonTypeConverter<GitHelperScriptFile, IGitHelperExtensionFile>());
                     var configuration = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(ConfigFile),
                         se);
 
@@ -78,7 +77,8 @@ namespace GitHelper.Extension
         }
     }
 
-    public class CogConverter : JsonConverter
+    public class JsonTypeConverter<T, TInterface> : JsonConverter
+     where T:IJsonTypeConvertible<TInterface>
     {
         public override bool CanConvert(Type objectType)
         {
@@ -87,9 +87,8 @@ namespace GitHelper.Extension
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var target = serializer.Deserialize<Newtonsoft.Json.Linq.JObject>(reader);
-            var fileInfo = new GitHelperScriptFile(target["Name"].ToString(), target["Description"].ToString(),
-                target["FilePath"].ToString(), target["WorkingDirectory"].ToString());
+            var target = serializer.Deserialize<JObject>(reader);
+            var fileInfo = Activator.CreateInstance<T>().ConvertTo(target);
             //serializer.Populate(target.CreateReader(), target);
             return fileInfo;
         }

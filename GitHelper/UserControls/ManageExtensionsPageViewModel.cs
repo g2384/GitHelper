@@ -5,6 +5,7 @@ using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GitHelper.Extension;
+using GitHelper.Extension.Helpers;
 using GitHelper.Extension.Interfaces;
 using GitHelper.Helpers;
 
@@ -27,12 +28,13 @@ namespace GitHelper.UserControls
             get => _extension;
             set
             {
-                _extension = value;
-                ExtensionName = _extension.Name;
-                ExtensionDescription = _extension.Description;
-                WorkingDirectory = _extension.WorkingDirectory;
-                RaisePropertyChanged(nameof(Extension));
-                DeleteExtensionCommand.RaiseCanExecuteChanged();
+                if (Set(ref _extension, value))
+                {
+                    ExtensionName = _extension?.Name;
+                    ExtensionDescription = _extension?.Description;
+                    WorkingDirectory = _extension?.WorkingDirectory;
+                    DeleteExtensionCommand.RaiseCanExecuteChanged();
+                }
             }
         }
 
@@ -42,9 +44,10 @@ namespace GitHelper.UserControls
             get => _selectedPath;
             set
             {
-                _selectedPath = value;
-                RaisePropertyChanged("SelectedPath");
-                RaisePropertyChanged("CanAdd");
+                if (Set(ref _selectedPath, value))
+                {
+                    RaisePropertyChanged(nameof(CanAdd));
+                }
             }
         }
 
@@ -52,11 +55,7 @@ namespace GitHelper.UserControls
         public string ExtensionName
         {
             get => _extensionName;
-            set
-            {
-                _extensionName = value;
-                RaisePropertyChanged(nameof(ExtensionName));
-            }
+            set => Set(ref _extensionName, value);
         }
 
         private string _extensionDescription;
@@ -64,11 +63,7 @@ namespace GitHelper.UserControls
         public string ExtensionDescription
         {
             get => _extensionDescription;
-            set
-            {
-                _extensionDescription = value;
-                RaisePropertyChanged(nameof(ExtensionDescription));
-            }
+            set => Set(ref _extensionDescription, value);
         }
 
         private string _workingDirectory;
@@ -76,11 +71,7 @@ namespace GitHelper.UserControls
         public string WorkingDirectory
         {
             get => _workingDirectory;
-            set
-            {
-                _workingDirectory = value;
-                RaisePropertyChanged(nameof(WorkingDirectory));
-            }
+            set => Set(ref _workingDirectory, value);
         }
 
         private bool _useRelativePath;
@@ -90,21 +81,13 @@ namespace GitHelper.UserControls
             set
             {
                 _useRelativePath = value;
-                var newPaths = new List<string>();
-                var currentPath = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
-                if (_useRelativePath)
-                {
-                    newPaths = Utility.GetRelativePaths(_selectedFilePaths, currentPath);
-                }
-                else
-                {
-                    newPaths = Utility.GetAbsolutePaths(_selectedFilePaths, currentPath);
-                }
-                SetSelectedPath(newPaths);
-                RaisePropertyChanged("SelectedPath");
+
+                SetSelectedPath();
                 RaisePropertyChanged("UseRelativePath");
             }
         }
+
+        private string _currentDirectory = FilePathHelper.GetCurrentDirectory();
 
         public bool CanAdd => !string.IsNullOrWhiteSpace(SelectedPath);
 
@@ -141,7 +124,11 @@ namespace GitHelper.UserControls
                 return;
             }
 
-            _configuration.Extensions.Remove(Extension);
+            _configuration.Extensions.RemoveAll(
+                e => e.Name == Extension.Name
+                     && e.Description == Extension.Description
+                     );
+            _configuration.Save();
             var extensionArgs = new ManageExtensionEventArgs(new List<IGitHelperExtensionFile>() { Extension });
             OnDeleteExtension?.Invoke(this, extensionArgs);
             Extension = null;
@@ -154,6 +141,7 @@ namespace GitHelper.UserControls
         {
             var extensionFiles = ExtensionViewModelHelper.GetExtensionFiles(_selectedFilePaths, true);
             _configuration.Extensions.AddRange(extensionFiles);
+            _configuration.Save();
             _selectedFilePaths = new List<string>();
             SelectedPath = null;
             var extensionArgs = new ManageExtensionEventArgs(extensionFiles);
@@ -168,6 +156,14 @@ namespace GitHelper.UserControls
                 return;
             }
 
+            SetSelectedPath();
+        }
+
+        private void SetSelectedPath()
+        {
+            _selectedFilePaths = _useRelativePath
+                            ? FilePathHelper.GetRelativePaths(_selectedFilePaths, _currentDirectory)
+                            : FilePathHelper.GetAbsolutePaths(_selectedFilePaths, _currentDirectory);
             SetSelectedPath(_selectedFilePaths);
         }
 

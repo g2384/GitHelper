@@ -22,11 +22,7 @@ namespace GitHelper.UserControls
         public string Output
         {
             get => _output;
-            set
-            {
-                _output = value;
-                RaisePropertyChanged(nameof(Output));
-            }
+            set => Set(ref _output, value);
         }
 
         public void Run()

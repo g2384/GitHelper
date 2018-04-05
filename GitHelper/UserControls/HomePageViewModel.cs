@@ -7,6 +7,7 @@ using System.Windows;
 using GalaSoft.MvvmLight;
 using GitHelper.Extension;
 using GitHelper.Extension.Attributes;
+using GitHelper.Extension.Helpers;
 using GitHelper.Extension.Interfaces;
 
 namespace GitHelper.UserControls
@@ -20,15 +21,12 @@ namespace GitHelper.UserControls
     public class HomePageViewModel : ViewModelBase
     {
         public ExtensionInfoViewModel ExtensionInfoViewModel { get; }
-        
+
         private ManageExtensionsPageViewModel _manageExtensionsPageViewModel;
         public ManageExtensionsPageViewModel ManageExtensionsPageViewModel
         {
-            get => _manageExtensionsPageViewModel; set
-            {
-                _manageExtensionsPageViewModel = value;
-                RaisePropertyChanged(nameof(ManageExtensionsPageViewModel));
-            }
+            get => _manageExtensionsPageViewModel;
+            set => Set(ref _manageExtensionsPageViewModel, value);
         }
 
         private int _tabIndex;
@@ -37,13 +35,13 @@ namespace GitHelper.UserControls
             get => _tabIndex;
             set
             {
-                _tabIndex = value;
-                if ((HomePageViewType)_tabIndex == HomePageViewType.Info)
+                if (Set(ref _tabIndex, value))
                 {
-                    ShowStartInfo();
+                    if ((HomePageViewType)_tabIndex == HomePageViewType.Info)
+                    {
+                        ShowStartInfo();
+                    }
                 }
-
-                RaisePropertyChanged("TabIndex");
             }
         }
 
@@ -51,11 +49,7 @@ namespace GitHelper.UserControls
         public ObservableCollection<ExtensionInfo> Extensions
         {
             get => _extensions;
-            set
-            {
-                _extensions = value;
-                RaisePropertyChanged(nameof(Extensions));
-            }
+            set => Set(ref _extensions, value);
         }
 
         private ExtensionInfo _selectedExtension;
@@ -64,13 +58,16 @@ namespace GitHelper.UserControls
             get => _selectedExtension;
             set
             {
-                _selectedExtension = value;
-                ShowExtensionInfo(_selectedExtension);
-                RaisePropertyChanged(nameof(SelectedExtension));
+                if (Set(ref _selectedExtension, value))
+                {
+                    ShowExtensionInfo(_selectedExtension);
+                }
             }
         }
 
         private Configuration _configuration;
+
+        private string _currentDirectory = FilePathHelper.GetCurrentDirectory();
 
         public HomePageViewModel(Configuration configuration)
         {
@@ -128,7 +125,7 @@ namespace GitHelper.UserControls
             {
                 var extensionInfo = new ExtensionInfo(e, ShowExtensionOutput);
                 extensions.Add(extensionInfo);
-            }            
+            }
         }
 
         private void ShowExtensionOutput(string filePath)
@@ -138,7 +135,18 @@ namespace GitHelper.UserControls
                 throw new ArgumentNullException(nameof(filePath));
             }
 
-            if((HomePageViewType)TabIndex == HomePageViewType.Settings)
+            if (!FilePathHelper.IsFullPath(filePath))
+            {
+                filePath = FilePathHelper.GetRelativePath(filePath, _currentDirectory);
+            }
+
+            if (!File.Exists(filePath))
+            {
+                MessageBox.Show(string.Format("Cannot find file \"{0}\"", filePath));
+                return;
+            }
+
+            if ((HomePageViewType)TabIndex == HomePageViewType.Settings)
             {
                 ManageExtensionsPageViewModel.Extension = new GitHelperScriptFile(filePath);
                 return;
@@ -177,7 +185,7 @@ namespace GitHelper.UserControls
 
         public void ShowTabItem(HomePageViewType viewType)
         {
-            TabIndex = (int) viewType;
+            TabIndex = (int)viewType;
         }
 
         IEnumerable<Type> GetTypesWith<TAttribute>(bool inherit)

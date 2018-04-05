@@ -23,44 +23,28 @@ namespace ExportCommitMessages
         public DateTime? StartDate
         {
             get => _startDate;
-            set
-            {
-                _startDate = value;
-                RaisePropertyChanged("StartDate");
-            }
+            set => Set(ref _startDate, value);
         }
 
         private DateTime? _endDate;
         public DateTime? EndDate
         {
             get => _endDate;
-            set
-            {
-                _endDate = value;
-                RaisePropertyChanged("EndDate");
-            }
+            set => Set(ref _endDate, value);
         }
 
         private string _keywords;
         public string Keywords
         {
             get => _keywords;
-            set
-            {
-                _keywords = value;
-                RaisePropertyChanged("Keywords");
-            }
+            set => Set(ref _keywords, value);
         }
 
         private string _example;
         public string Example
         {
             get => _example;
-            set
-            {
-                _example = value;
-                RaisePropertyChanged("Example");
-            }
+            set => Set(ref _example, value);
         }
 
 
@@ -70,11 +54,12 @@ namespace ExportCommitMessages
             get => _format;
             set
             {
-                _format = value;
-                Formats = Parse(_format);
-                var example = GetExample(Formats);
-                Example = example;
-                RaisePropertyChanged("Format");
+                if (Set(ref _format, value))
+                {
+                    Formats = Parse(_format);
+                    var example = GetExample(Formats);
+                    Example = example;
+                }
             }
         }
 
@@ -82,33 +67,21 @@ namespace ExportCommitMessages
         public List<string> BranchNames
         {
             get => _branchNames;
-            set
-            {
-                _branchNames = value;
-                RaisePropertyChanged("BranchNames");
-            }
+            set => Set(ref _branchNames, value);
         }
 
         private string _repoPath;
         public string RepoPath
         {
             get => _repoPath;
-            set
-            {
-                _repoPath = value;
-                RaisePropertyChanged("RepoPath");
-            }
+            set => Set(ref _repoPath, value);
         }
 
         private string _selectedBranchname;
         public string SelectedBranchName
         {
             get => _selectedBranchname;
-            set
-            {
-                _selectedBranchname = value;
-                RaisePropertyChanged("SelectedBranchName");
-            }
+            set => Set(ref _selectedBranchname, value);
         }
 
         public ICommand LoadBranchCommand { get; }

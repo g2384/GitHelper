@@ -19,34 +19,31 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-    <Grid Margin="0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Label Grid.Row="0" Grid.Column="0" Content="Repo Path" Style="{StaticResource LabelText}"/>
+        <Grid Margin="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" Content="Repo Path" Style="{StaticResource LabelText}"/>
             <TextBox Grid.Row="0" Grid.Column="1" Margin="0, 5" Padding="2, 5" 
                          Text="{Binding RepoPath}" />
-            <GroupBox Grid.Row="1" Grid.Column="0" 
-                          Grid.ColumnSpan="2" 
-                          Padding="10,5"
-                          Header="Don't show warning message when">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <CheckBox Grid.Row="0" Margin="0,5" Content="Deleting a branch" IsChecked="{Binding ShowWarningWhenDeleteBranch}"/>
-                    <CheckBox Grid.Row="1" Margin="0,5" Content="Executing a script" IsChecked="{Binding ShowWarningWhenExecuteScript}"/>
-                </Grid>
-            </GroupBox>
+            <Grid Grid.Row="1" Grid.Column="0" 
+                      Grid.ColumnSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <CheckBox Grid.Row="0" Margin="0,5" 
+                              Content="Show warning message before executing a script" 
+                              IsChecked="{Binding ShowWarningBeforeExecutingScript}"/>
+            </Grid>
         </Grid>
         <StackPanel Grid.Row="1"
                     Grid.ColumnSpan="2" 

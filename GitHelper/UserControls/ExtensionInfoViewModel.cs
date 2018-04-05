@@ -8,11 +8,7 @@ namespace GitHelper.UserControls
         public string FullInfo
         {
             get => _fullInfo;
-            set
-            {
-                _fullInfo = value;
-                RaisePropertyChanged("FullInfo");
-            }
+            set => Set(ref _fullInfo, value); 
         }
     }
 }

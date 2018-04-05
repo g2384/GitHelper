@@ -4,6 +4,7 @@ using GitHelper.Extension;
 using GitHelper.UserControls;
 using NLog;
 using System;
+using System.Windows;
 using System.Windows.Input;
 
 namespace GitHelper
@@ -30,11 +31,7 @@ namespace GitHelper
         public int DisabledButton
         {
             get => _disabledButton;
-            set
-            {
-                _disabledButton = value;
-                RaisePropertyChanged(nameof(DisabledButton));
-            }
+            set => Set(ref _disabledButton, value);
         }
 
         public Configuration Config { get; set; }
@@ -85,7 +82,7 @@ namespace GitHelper
         public MainWindowViewModel()
         {
             Config = Configuration.GetConfiguration();
-            SettingsPageViewModel = new SettingsPageViewModel();
+            SettingsPageViewModel = new SettingsPageViewModel(Config);
             HomePageViewModel = new HomePageViewModel(Config);
             DisplayHomeScreen();
             OpenSettingsCommand = new RelayCommand(() => ShowTabItem(MainWindowControlType.Settings));
@@ -117,18 +114,23 @@ namespace GitHelper
         private SettingsPageViewModel _settingsPageViewModel;
         public SettingsPageViewModel SettingsPageViewModel
         {
-            get => _settingsPageViewModel; set
-            {
-                _settingsPageViewModel = value;
-                RaisePropertyChanged("SettingsPageViewModel");
-            }
+            get => _settingsPageViewModel;
+            set => Set(ref _settingsPageViewModel, value);
         }
 
         private void DisplayHomeScreen()
         {
-            TabIndex = (int)MainWindowControlType.Home;
-            HomePageViewModel.LoadExtensions();
-            HomePageViewModel.ShowStartInfo();
+            try
+            {
+                TabIndex = (int) MainWindowControlType.Home;
+                HomePageViewModel.LoadExtensions();
+                HomePageViewModel.ShowStartInfo();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Error", MessageBoxButton.OK);
+                _log.Error(e, "Exception");
+            }
         }
 
         private void Refresh()

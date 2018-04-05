@@ -13,7 +13,7 @@ namespace GitHelper.Helpers
         public bool TriggerValue
         {
             get => triggerValue;
-            set { triggerValue = value; }
+            set => triggerValue = value;
         }
         //Set to true if you just want to hide the control
         //else set to false if you want to collapse the control
@@ -21,7 +21,7 @@ namespace GitHelper.Helpers
         public bool IsHidden
         {
             get => isHidden;
-            set { isHidden = value; }
+            set => isHidden = value;
         }
 
         private object GetVisibility(object value)

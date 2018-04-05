@@ -30,33 +30,21 @@ namespace ManageBranches
         public string Repo
         {
             get => _repo;
-            set
-            {
-                _repo = value;
-                RaisePropertyChanged("Repo");
-            }
+            set => Set(ref _repo, value);
         }
 
         private string _mergedInBranch;
         public string MergedInBranch
         {
             get => _mergedInBranch;
-            set
-            {
-                _mergedInBranch = value;
-                RaisePropertyChanged("MergedInBranch");
-            }
+            set => Set(ref _mergedInBranch, value);
         }
 
         private string _ignoredBranches;
         public string IgnoredBranches
         {
             get => _ignoredBranches;
-            set
-            {
-                _ignoredBranches = value;
-                RaisePropertyChanged("IgnoredBranches");
-            }
+            set => Set(ref _ignoredBranches, value);
         }
 
         private bool _onlyDeleteMerged;
@@ -65,11 +53,12 @@ namespace ManageBranches
             get => _onlyDeleteMerged;
             set
             {
-                _onlyDeleteMerged = value;
-                Config.OnlyDeleteMerged = _onlyDeleteMerged;
-                IsDeleteEnabled = GetIsDeleteEnabled();
-                Config.Save();
-                RaisePropertyChanged("OnlyDeleteMerged");
+                if (Set(ref _onlyDeleteMerged, value))
+                {
+                    Config.OnlyDeleteMerged = _onlyDeleteMerged;
+                    IsDeleteEnabled = GetIsDeleteEnabled();
+                    Config.Save();
+                }
             }
         }
 
@@ -82,11 +71,7 @@ namespace ManageBranches
         public bool IsDeleteEnabled
         {
             get => _isDeleteEnabled;
-            set
-            {
-                _isDeleteEnabled = value;
-                RaisePropertyChanged("IsDeleteEnabled");
-            }
+            set => Set(ref _isDeleteEnabled, value);
         }
 
         private BranchInfo _selectedBranch;
@@ -95,9 +80,10 @@ namespace ManageBranches
             get => _selectedBranch;
             set
             {
-                _selectedBranch = value;
-                IsDeleteEnabled = GetIsDeleteEnabled();
-                RaisePropertyChanged("SelectedBranch");
+                if (Set(ref _selectedBranch, value))
+                {
+                    IsDeleteEnabled = GetIsDeleteEnabled();
+                }
             }
         }
 
