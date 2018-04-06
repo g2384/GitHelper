@@ -28,7 +28,7 @@ namespace GitHelper.Helpers
         {
             if (!(value is bool))
                 return DependencyProperty.UnsetValue;
-            bool objValue = (bool)value;
+            var objValue = (bool)value;
             if ((objValue && TriggerValue && IsHidden) || (!objValue && !TriggerValue && IsHidden))
             {
                 return Visibility.Hidden;

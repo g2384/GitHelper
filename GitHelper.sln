@@ -5,13 +5,15 @@ VisualStudioVersion = 15.0.27428.2015
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitHelper", "GitHelper\GitHelper.csproj", "{80CED355-4333-4E5B-AFB5-9708480AA4B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extension", "Extension\Extension.csproj", "{139D3F9E-968F-42B4-A889-B50A4538D469}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Extension", "Extension\Extension.csproj", "{139D3F9E-968F-42B4-A889-B50A4538D469}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManageBranches", "ManageBranches\ManageBranches.csproj", "{E116F8D4-7430-4692-A6F8-9C4B279BCD1D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExportCommitMessages", "ExportCommitMessages\ExportCommitMessages.csproj", "{F95820F2-0F8C-40FA-A2F3-2D2F445E4016}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIExtension", "UIExtension\UIExtension.csproj", "{5BC4B47D-222D-4772-B1F0-2DC8484C0F5D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchCommitChanges", "SearchCommitChanges\SearchCommitChanges.csproj", "{559B4D2B-DD7C-41C8-8C0F-D3E22556DC6A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +63,14 @@ Global
 		{5BC4B47D-222D-4772-B1F0-2DC8484C0F5D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5BC4B47D-222D-4772-B1F0-2DC8484C0F5D}.Release|x86.ActiveCfg = Release|Any CPU
 		{5BC4B47D-222D-4772-B1F0-2DC8484C0F5D}.Release|x86.Build.0 = Release|Any CPU
+		{559B4D2B-DD7C-41C8-8C0F-D3E22556DC6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{559B4D2B-DD7C-41C8-8C0F-D3E22556DC6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{559B4D2B-DD7C-41C8-8C0F-D3E22556DC6A}.Debug|x86.ActiveCfg = Debug|x86
+		{559B4D2B-DD7C-41C8-8C0F-D3E22556DC6A}.Debug|x86.Build.0 = Debug|x86
+		{559B4D2B-DD7C-41C8-8C0F-D3E22556DC6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{559B4D2B-DD7C-41C8-8C0F-D3E22556DC6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{559B4D2B-DD7C-41C8-8C0F-D3E22556DC6A}.Release|x86.ActiveCfg = Release|Any CPU
+		{559B4D2B-DD7C-41C8-8C0F-D3E22556DC6A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

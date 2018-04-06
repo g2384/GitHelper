@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -30,18 +31,18 @@ namespace ManageBranches
                     null,
                     (o, e) =>
                     {
-                        ItemsControl listView = o as ItemsControl;
+                        var listView = o as ItemsControl;
                         if (listView != null)
                         {
                             if (!GetAutoSort(listView)) // Don't change click handler if AutoSort enabled
                             {
                                 if (e.OldValue != null && e.NewValue == null)
                                 {
-                                    listView.RemoveHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(ColumnHeader_Click));
+                                    listView.RemoveHandler(ButtonBase.ClickEvent, new RoutedEventHandler(ColumnHeader_Click));
                                 }
                                 if (e.OldValue == null && e.NewValue != null)
                                 {
-                                    listView.AddHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(ColumnHeader_Click));
+                                    listView.AddHandler(ButtonBase.ClickEvent, new RoutedEventHandler(ColumnHeader_Click));
                                 }
                             }
                         }
@@ -69,20 +70,20 @@ namespace ManageBranches
                     false,
                     (o, e) =>
                     {
-                        ListView listView = o as ListView;
+                        var listView = o as ListView;
                         if (listView != null)
                         {
                             if (GetCommand(listView) == null) // Don't change click handler if a command is set
                             {
-                                bool oldValue = (bool)e.OldValue;
-                                bool newValue = (bool)e.NewValue;
+                                var oldValue = (bool)e.OldValue;
+                                var newValue = (bool)e.NewValue;
                                 if (oldValue && !newValue)
                                 {
-                                    listView.RemoveHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(ColumnHeader_Click));
+                                    listView.RemoveHandler(ButtonBase.ClickEvent, new RoutedEventHandler(ColumnHeader_Click));
                                 }
                                 if (!oldValue && newValue)
                                 {
-                                    listView.AddHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(ColumnHeader_Click));
+                                    listView.AddHandler(ButtonBase.ClickEvent, new RoutedEventHandler(ColumnHeader_Click));
                                 }
                             }
                         }
@@ -115,16 +116,16 @@ namespace ManageBranches
 
         private static void ColumnHeader_Click(object sender, RoutedEventArgs e)
         {
-            GridViewColumnHeader headerClicked = e.OriginalSource as GridViewColumnHeader;
+            var headerClicked = e.OriginalSource as GridViewColumnHeader;
             if (headerClicked != null)
             {
-                string propertyName = GetPropertyName(headerClicked.Column);
+                var propertyName = GetPropertyName(headerClicked.Column);
                 if (!string.IsNullOrEmpty(propertyName))
                 {
-                    ListView listView = GetAncestor<ListView>(headerClicked);
+                    var listView = GetAncestor<ListView>(headerClicked);
                     if (listView != null)
                     {
-                        ICommand command = GetCommand(listView);
+                        var command = GetCommand(listView);
                         if (command != null)
                         {
                             if (command.CanExecute(propertyName))
@@ -160,7 +161,7 @@ namespace ManageBranches
 
         public static void ApplySort(ICollectionView view, string propertyName)
         {
-            ListSortDirection direction = ListSortDirection.Ascending;
+            var direction = ListSortDirection.Ascending;
             if (view.SortDescriptions.Count > 0)
             {
                 SortDescription currentSort = view.SortDescriptions[0];

@@ -36,7 +36,7 @@ namespace GitHelper
 
         public Configuration Config { get; set; }
 
-        private static Logger _log = LogManager.GetCurrentClassLogger();
+        private static readonly Logger _log = LogManager.GetCurrentClassLogger();
 
         private int _tabIndex;
         public int TabIndex
@@ -81,14 +81,22 @@ namespace GitHelper
 
         public MainWindowViewModel()
         {
-            Config = Configuration.GetConfiguration();
-            SettingsPageViewModel = new SettingsPageViewModel(Config);
-            HomePageViewModel = new HomePageViewModel(Config);
-            DisplayHomeScreen();
-            OpenSettingsCommand = new RelayCommand(() => ShowTabItem(MainWindowControlType.Settings));
-            OpenManageExtensionCommand = new RelayCommand(() => ShowHomeTabItem(HomePageViewType.Settings));
-            RefreshCommand = new RelayCommand(Refresh);
-            OpenHomeCommand = new RelayCommand(() => ShowHomeTabItem(HomePageViewType.Info));
+            try
+            {
+                Config = Configuration.GetConfiguration();
+                SettingsPageViewModel = new SettingsPageViewModel(Config);
+                HomePageViewModel = new HomePageViewModel(Config);
+                DisplayHomeScreen();
+                OpenSettingsCommand = new RelayCommand(() => ShowTabItem(MainWindowControlType.Settings));
+                OpenManageExtensionCommand = new RelayCommand(() => ShowHomeTabItem(HomePageViewType.Settings));
+                RefreshCommand = new RelayCommand(Refresh);
+                OpenHomeCommand = new RelayCommand(() => ShowHomeTabItem(HomePageViewType.Info));
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Error", MessageBoxButton.OK);
+                _log.Error(e, "Exception");
+            }
         }
 
         private void ShowHomeTabItem(HomePageViewType viewType)

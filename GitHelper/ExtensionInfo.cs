@@ -24,8 +24,8 @@ namespace GitHelper
 
         public string WorkingDirectory { get; set; }
 
-        private IGitHelperActionMeta _actionMeta;
-        private Configuration _config;
+        private readonly IGitHelperActionMeta _actionMeta;
+        private readonly Configuration _config;
 
         public bool IsPlugin => Features.Contains(ExtensionFeatures.IsAssembly);
 
@@ -33,7 +33,7 @@ namespace GitHelper
 
         public bool HasNewWindow => Features.Contains(ExtensionFeatures.HasNewWindow);
 
-        private string _filePath;
+        private readonly string _filePath;
 
         public ExtensionInfo(IGitHelperActionMeta actionMeta, Configuration config)
         {
@@ -46,22 +46,24 @@ namespace GitHelper
             ExecuteCommand = new RelayCommand(ShowExtensionDialog);
         }
 
-        public ExtensionInfo(IGitHelperExtensionFile extensionFile, Action<string> showDialog)
+        public ExtensionInfo(IGitHelperExtensionFile extensionFile, Action<string, string> showDialog)
         {
             Name = extensionFile.Name;
             Description = extensionFile.Description;
             ShortDescription = extensionFile.ShortDescription;
             Features = extensionFile.Features;
             _filePath = extensionFile.FilePath;
+            _workingDirectory = extensionFile.WorkingDirectory;
             _showDialog = showDialog;
             ExecuteCommand = new RelayCommand(RunFile);
         }
 
-        private Action<string> _showDialog;
+        private readonly string _workingDirectory;
+        private readonly Action<string, string> _showDialog;
 
         private void RunFile()
         {
-            _showDialog(_filePath);
+            _showDialog(_filePath, _workingDirectory);
         }
 
         private void ShowExtensionDialog()
@@ -74,7 +76,7 @@ namespace GitHelper
             var html = Utility.GetResourceText("pack://application:,,,/HtmlPages/ExtensionInfo.html");
             html = html.Replace("{Name}", Name);
             html = html.Replace("{Description}", Description);
-            string featureInfo = string.Empty;
+            var featureInfo = string.Empty;
             if (!Utility.IsNullOrEmpty(Features))
             {
                 var features = new List<string>();

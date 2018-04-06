@@ -1,4 +1,4 @@
-﻿using System.Windows.Input;
+using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using GitHelper.Extension;
@@ -7,7 +7,7 @@ namespace GitHelper.UserControls
 {
     public class SettingsPageViewModel : ViewModelBase
     {
-        private Configuration _configuration;
+        private readonly Configuration _configuration;
 
         private string _repoPath;
 
@@ -32,7 +32,14 @@ namespace GitHelper.UserControls
             _configuration = configuration;
             RepoPath = configuration.RepoPath;
             ShowWarningBeforeExecutingScript = configuration.ShowWarningBeforeExecutingScript;
-            SaveCommand = new RelayCommand(_configuration.Save);
+            SaveCommand = new RelayCommand(Save);
+        }
+
+        private void Save()
+        {
+            _configuration.RepoPath = RepoPath;
+            _configuration.ShowWarningBeforeExecutingScript = ShowWarningBeforeExecutingScript;
+            _configuration.Save();
         }
     }
 }

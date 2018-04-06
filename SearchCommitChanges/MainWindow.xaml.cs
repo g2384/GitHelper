@@ -1,6 +1,6 @@
 using System.Windows;
 
-namespace GitHelper
+namespace DeepBlameLine
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -11,10 +11,6 @@ namespace GitHelper
         {
             InitializeComponent();
             DataContext = new MainWindowViewModel();
-            StyleProperty.OverrideMetadata(typeof(Window), new FrameworkPropertyMetadata
-            {
-                DefaultValue = FindResource(typeof(Window))
-            });
         }
     }
 }

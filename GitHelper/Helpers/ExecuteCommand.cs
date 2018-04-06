@@ -11,13 +11,13 @@ namespace GitHelper.Helpers
 
         }
 
-        public void Execute(string filePath, string command)
+        public void Execute(string workingDirectory, string command)
         {
             // create the ProcessStartInfo using "cmd" as the program to be run, and "/c " as the parameters.
             // Incidentally, /c tells cmd that we want it to execute the command that follows, and then exit.
-            ProcessStartInfo procStartInfo = new ProcessStartInfo("cmd", "/c "+command);
+            var procStartInfo = new ProcessStartInfo("cmd", "/c " + command);
 
-            procStartInfo.WorkingDirectory = new FileInfo(filePath).Directory.FullName;
+            procStartInfo.WorkingDirectory = workingDirectory;
 
             //redirected to the Process.StandardOutput StreamReader.
             procStartInfo.RedirectStandardOutput = true;
@@ -28,7 +28,7 @@ namespace GitHelper.Helpers
             // Do not create the black window.
             procStartInfo.CreateNoWindow = true;
             // Now we create a process, assign its ProcessStartInfo and start it
-            Process proc = new Process();
+            var proc = new Process();
 
             //This is important, else some Events will not fire!
             proc.EnableRaisingEvents = true;

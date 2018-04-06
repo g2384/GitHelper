@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using GalaSoft.MvvmLight;
 using GitHelper.Extension;
@@ -65,9 +67,9 @@ namespace GitHelper.UserControls
             }
         }
 
-        private Configuration _configuration;
+        private readonly Configuration _configuration;
 
-        private string _currentDirectory = FilePathHelper.GetCurrentDirectory();
+        private readonly string _currentDirectory = FilePathHelper.GetCurrentDirectory();
 
         public HomePageViewModel(Configuration configuration)
         {
@@ -128,7 +130,7 @@ namespace GitHelper.UserControls
             }
         }
 
-        private void ShowExtensionOutput(string filePath)
+        private void ShowExtensionOutput(string filePath, string workingDirectory)
         {
             if (string.IsNullOrWhiteSpace(filePath))
             {
@@ -137,7 +139,7 @@ namespace GitHelper.UserControls
 
             if (!FilePathHelper.IsFullPath(filePath))
             {
-                filePath = FilePathHelper.GetRelativePath(filePath, _currentDirectory);
+                filePath = FilePathHelper.GetAbsolutePath(filePath, _currentDirectory);
             }
 
             if (!File.Exists(filePath))
@@ -159,8 +161,27 @@ namespace GitHelper.UserControls
             {
                 return;
             }
-            var viewModel = new ExtensionOutputViewModel(filePath);
-            ExtensionOutput extensionOutput = new ExtensionOutput()
+
+            if (string.IsNullOrWhiteSpace(workingDirectory))
+            {
+                workingDirectory = _configuration.RepoPath;
+            }
+
+
+            TaskScheduler syncContextScheduler;
+            if (SynchronizationContext.Current != null)
+            {
+                syncContextScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            }
+            else
+            {
+                // If there is no SyncContext for this thread (e.g. we are in a unit test
+                // or console scenario instead of running in an app), then just use the
+                // default scheduler because there is no UI thread to sync with.
+                syncContextScheduler = TaskScheduler.Current;
+            }
+            var viewModel = new ExtensionOutputViewModel(filePath, workingDirectory, syncContextScheduler);
+            var extensionOutput = new ExtensionOutput()
             {
                 DataContext = viewModel
             };

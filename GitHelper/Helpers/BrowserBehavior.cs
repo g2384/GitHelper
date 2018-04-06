@@ -24,7 +24,7 @@ namespace GitHelper.Helpers
 
         static void OnHtmlChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
-            WebBrowser webBrowser = dependencyObject as WebBrowser;
+            var webBrowser = dependencyObject as WebBrowser;
             if (webBrowser != null)
                 webBrowser.NavigateToString(e.NewValue as string ?? "&nbsp;");
         }

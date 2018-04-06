@@ -87,7 +87,7 @@ namespace GitHelper.UserControls
             }
         }
 
-        private string _currentDirectory = FilePathHelper.GetCurrentDirectory();
+        private readonly string _currentDirectory = FilePathHelper.GetCurrentDirectory();
 
         public bool CanAdd => !string.IsNullOrWhiteSpace(SelectedPath);
 
@@ -101,7 +101,7 @@ namespace GitHelper.UserControls
 
         public ICommand SaveCommand { get; }
 
-        private Configuration _configuration;
+        private readonly Configuration _configuration;
 
         public ManageExtensionsPageViewModel(Configuration configuration)
         {
@@ -150,7 +150,7 @@ namespace GitHelper.UserControls
 
         private void OpenFile()
         {
-            _selectedFilePaths = new FileDialogService().SelectFilesDialog(out bool? result, null, "Extensions|*.bat;*.dll;*.exe").ToList();
+            _selectedFilePaths = new FileDialogService().SelectFilesDialog(out var result, null, "Extensions|*.bat;*.dll;*.exe").ToList();
             if (result != true)
             {
                 return;

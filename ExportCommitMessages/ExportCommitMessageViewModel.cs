@@ -250,7 +250,7 @@ namespace ExportCommitMessages
 
         private string GetExample(List<CommitExportFormat> formats)
         {
-            List<string> exampleParts = new List<string>();
+            var exampleParts = new List<string>();
             foreach (var format in formats)
             {
                 switch (format.MessageType)
@@ -293,8 +293,8 @@ namespace ExportCommitMessages
                 return format;
             }
 
-            string EscapedOpenSqureBracket = "@@EscapedOpenBracket";
-            string EscapedCloseSqureBracket = "@@EscapedCloseBracket";
+            var EscapedOpenSqureBracket = "@@EscapedOpenBracket";
+            var EscapedCloseSqureBracket = "@@EscapedCloseBracket";
             text = new Regex(@"(?<!\\)\\t").Replace(text, "\t");
             text = new Regex(@"(?<!\\)\\\[").Replace(text, EscapedOpenSqureBracket);
             text = new Regex(@"(?<!\\)\\\]").Replace(text, EscapedCloseSqureBracket);
