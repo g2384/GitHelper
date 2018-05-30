@@ -77,6 +77,16 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
+                    <GridViewColumn Width="Auto">
+                        <GridViewColumn.Header>
+                            <TextBlock Text="Is Gone" Padding="5,0" HorizontalAlignment="Center" FontWeight="Normal"/>
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding IsGone}" Width="50" TextAlignment="Center" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn Width="600" DisplayMemberBinding="{Binding LastCommit}">
                         <GridViewColumn.Header>
                             <TextBlock Text="Last Commit" HorizontalAlignment="Center" FontWeight="Normal"/>

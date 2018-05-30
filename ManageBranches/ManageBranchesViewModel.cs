@@ -127,43 +127,16 @@ namespace ManageBranches
             lines.RemoveRange(lines.Count - 2, 2);
             var hashStartIndex = new int[lines.Count];
             var hashRegex = new Regex(@" [a-zA-Z0-9]+ \[origin/");
-            var gitCmdStartLine = -1;
-            var gitCmdEndLine = -1;
             for (var i = 0; i < lines.Count; i++)
             {
                 var line = lines[i];
                 var match = hashRegex.Match(line);
-                if (match == Match.Empty)
+                if (match.Success)
                 {
-                    if (gitCmdEndLine < 0 && gitCmdStartLine >= 0)
-                    {
-                        gitCmdEndLine = i - 1;
-                    }
-                    continue;
+                    hashStartIndex[i] = match.Captures[0].Index + 1;
                 }
-
-                if (gitCmdStartLine < 0)
-                {
-                    gitCmdStartLine = i;
-                }
-                hashStartIndex[i] = match.Captures[0].Index + 1;
-            }
-            if (gitCmdEndLine < 0 && gitCmdStartLine >= 0)
-            {
-                gitCmdEndLine = lines.Count - 1;
-            }
-            if (gitCmdStartLine < 0)
-            {
-                _log.Info($"did not find local branches with command {GitBranchvv}");
-                return;
             }
 
-            var hashStartIndexList = hashStartIndex.ToList();
-            var removeLineCount = hashStartIndexList.Count - (gitCmdEndLine + 1);
-            hashStartIndexList.RemoveRange(gitCmdEndLine + 1, removeLineCount);
-            hashStartIndexList.RemoveRange(0, gitCmdStartLine);
-            lines.RemoveRange(gitCmdEndLine + 1, removeLineCount);
-            lines.RemoveRange(0, gitCmdStartLine);
             var goneBranches = lines.Where(l => l.IndexOf(": gone] ", StringComparison.Ordinal) >= 0).ToList();
             if (goneBranches.Count == 0)
             {
@@ -176,6 +149,7 @@ namespace ManageBranches
                     continue;
                 }
 
+                b.IsGone = BranchInfo.CheckMark;
                 if (string.IsNullOrWhiteSpace(b.IsLocal))
                 {
                     b.IsLocal = BranchInfo.CheckMark;
@@ -260,6 +234,7 @@ namespace ManageBranches
                 Config.Save();
                 GetBranches();
                 GetBranchInfoFromGitCommand(Branches);
+                RaisePropertyChanged(nameof(Branches));
                 IsDeleteEnabled = false;
             }
             catch (Exception e)

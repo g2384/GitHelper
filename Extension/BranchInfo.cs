@@ -9,6 +9,7 @@ namespace GitHelper.Extension
         public string Name { get; set; }
         public string IsTracking { get; set; }
         public string IsLocal { get; set; }
+        public string IsGone { get; set; }
         public string LastCommit { get; set; }
         public string LastCommitDate { get; set; }
         public string MergedInDate { get; set; }
