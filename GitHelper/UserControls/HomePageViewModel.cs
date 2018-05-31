@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,6 +12,7 @@ using GitHelper.Extension;
 using GitHelper.Extension.Attributes;
 using GitHelper.Extension.Helpers;
 using GitHelper.Extension.Interfaces;
+using GitHelper.Helpers;
 
 namespace GitHelper.UserControls
 {
@@ -112,8 +114,38 @@ namespace GitHelper.UserControls
 
         private void AddPlugins(ObservableCollection<ExtensionInfo> extensions)
         {
+            List<Assembly> allAssemblies = new List<Assembly>();
+            string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            foreach (string dll in Directory.GetFiles(path, "*.dll"))
+                allAssemblies.Add(Assembly.LoadFile(dll));
+            foreach (string dll in Directory.GetFiles(path, "*.exe"))
+            {
+                if (!dll.Contains("GitHelper.exe"))
+                {
+                    allAssemblies.Add(Assembly.LoadFile(dll));
+                }
+            }
+
             var types = GetTypesWith<GitHelperActionAttribute>(false).ToList();
-            foreach (var type in types)
+            var addedTypes = new List<string>();
+            if (types.Any()) 
+            {
+                AddToExtensions(extensions, types);
+            }
+            else 
+            {
+                foreach (var assembly in allAssemblies) 
+                {
+                    var attributeTypes = GetTypesWith<GitHelperActionAttribute>(false, assembly).ToList();
+                    AddToExtensions(extensions, attributeTypes);
+                }
+            }
+        }
+
+        private void AddToExtensions(ObservableCollection<ExtensionInfo> extensions, List<Type> types)
+        {
+            foreach (var type in types) 
             {
                 var instance = (IGitHelperActionMeta)Activator.CreateInstance(type);
                 var extensionInfo = new ExtensionInfo(instance, _configuration);
@@ -214,6 +246,14 @@ namespace GitHelper.UserControls
         {
             return from a in AppDomain.CurrentDomain.GetAssemblies()
                    from t in a.GetTypes()
+                   where t.IsDefined(typeof(TAttribute), inherit)
+                   select t;
+        }
+
+        IEnumerable<Type> GetTypesWith<TAttribute>(bool inherit, Assembly assembly)
+            where TAttribute : Attribute
+        {
+            return from t in assembly.GetLoadableTypes()
                    where t.IsDefined(typeof(TAttribute), inherit)
                    select t;
         }
