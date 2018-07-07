@@ -9,21 +9,6 @@ using GitHelper.UIExtension;
 
 namespace GitHelper
 {
-    public enum MainWindowControlType
-    {
-        Home = 0,
-        Settings = 1,
-        Help = 2,
-    }
-
-    public enum MainWindowDisabledButton
-    {
-        Home = 0,
-        ManageExtensions = 1,
-        Settings = 2,
-        Help = 3
-    }
-
     public class MainWindowViewModel : ViewModelBase
     {
         private int _disabledButton;
