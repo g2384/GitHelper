@@ -12,7 +12,6 @@ using GitHelper.Extension;
 using GitHelper.Extension.Attributes;
 using GitHelper.Extension.Helpers;
 using GitHelper.Extension.Interfaces;
-using GitHelper.Helpers;
 
 namespace GitHelper.UserControls
 {
@@ -27,6 +26,7 @@ namespace GitHelper.UserControls
         public ExtensionInfoViewModel ExtensionInfoViewModel { get; }
 
         private ManageExtensionsPageViewModel _manageExtensionsPageViewModel;
+
         public ManageExtensionsPageViewModel ManageExtensionsPageViewModel
         {
             get => _manageExtensionsPageViewModel;
@@ -34,6 +34,7 @@ namespace GitHelper.UserControls
         }
 
         private int _tabIndex;
+
         public int TabIndex
         {
             get => _tabIndex;
@@ -50,6 +51,7 @@ namespace GitHelper.UserControls
         }
 
         private ObservableCollection<ExtensionInfo> _extensions;
+
         public ObservableCollection<ExtensionInfo> Extensions
         {
             get => _extensions;
@@ -57,6 +59,7 @@ namespace GitHelper.UserControls
         }
 
         private ExtensionInfo _selectedExtension;
+
         public ExtensionInfo SelectedExtension
         {
             get => _selectedExtension;
@@ -101,6 +104,7 @@ namespace GitHelper.UserControls
             {
                 Extensions.Add(new ExtensionInfo(extensionFile, ShowExtensionOutput));
             }
+
             RaisePropertyChanged(nameof(Extensions));
         }
 
@@ -114,12 +118,12 @@ namespace GitHelper.UserControls
 
         private void AddPlugins(ObservableCollection<ExtensionInfo> extensions)
         {
-            List<Assembly> allAssemblies = new List<Assembly>();
-            string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var allAssemblies = new List<Assembly>();
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-            foreach (string dll in Directory.GetFiles(path, "*.dll"))
+            foreach (var dll in Directory.GetFiles(path, "*.dll"))
                 allAssemblies.Add(Assembly.LoadFile(dll));
-            foreach (string dll in Directory.GetFiles(path, "*.exe"))
+            foreach (var dll in Directory.GetFiles(path, "*.exe"))
             {
                 if (!dll.Contains("GitHelper.exe"))
                 {
@@ -127,17 +131,16 @@ namespace GitHelper.UserControls
                 }
             }
 
-            var types = GetTypesWith<GitHelperActionAttribute>(false).ToList();
-            var addedTypes = new List<string>();
-            if (types.Any()) 
+            var types = AssemblyHelper.GetTypesWith<GitHelperActionAttribute>(false).ToList();
+            if (types.Any())
             {
                 AddToExtensions(extensions, types);
             }
-            else 
+            else
             {
-                foreach (var assembly in allAssemblies) 
+                foreach (var assembly in allAssemblies)
                 {
-                    var attributeTypes = GetTypesWith<GitHelperActionAttribute>(false, assembly).ToList();
+                    var attributeTypes = AssemblyHelper.GetTypesWith<GitHelperActionAttribute>(false, assembly).ToList();
                     AddToExtensions(extensions, attributeTypes);
                 }
             }
@@ -145,7 +148,7 @@ namespace GitHelper.UserControls
 
         private void AddToExtensions(ObservableCollection<ExtensionInfo> extensions, List<Type> types)
         {
-            foreach (var type in types) 
+            foreach (var type in types)
             {
                 var instance = (IGitHelperActionMeta)Activator.CreateInstance(type);
                 var extensionInfo = new ExtensionInfo(instance, _configuration);
@@ -187,7 +190,7 @@ namespace GitHelper.UserControls
             }
 
             var isOK = MessageBox.Show("Do you want to run this script" +
-                Environment.NewLine + "---------" + Environment.NewLine + File.ReadAllText(filePath),
+                                       Environment.NewLine + "---------" + Environment.NewLine + File.ReadAllText(filePath),
                 "Run Script", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (isOK != MessageBoxResult.Yes)
             {
@@ -212,6 +215,7 @@ namespace GitHelper.UserControls
                 // default scheduler because there is no UI thread to sync with.
                 syncContextScheduler = TaskScheduler.Current;
             }
+
             var viewModel = new ExtensionOutputViewModel(filePath, workingDirectory, syncContextScheduler);
             var extensionOutput = new ExtensionOutput()
             {
@@ -239,23 +243,6 @@ namespace GitHelper.UserControls
         public void ShowTabItem(HomePageViewType viewType)
         {
             TabIndex = (int)viewType;
-        }
-
-        IEnumerable<Type> GetTypesWith<TAttribute>(bool inherit)
-                              where TAttribute : Attribute
-        {
-            return from a in AppDomain.CurrentDomain.GetAssemblies()
-                   from t in a.GetTypes()
-                   where t.IsDefined(typeof(TAttribute), inherit)
-                   select t;
-        }
-
-        IEnumerable<Type> GetTypesWith<TAttribute>(bool inherit, Assembly assembly)
-            where TAttribute : Attribute
-        {
-            return from t in assembly.GetLoadableTypes()
-                   where t.IsDefined(typeof(TAttribute), inherit)
-                   select t;
         }
     }
 }

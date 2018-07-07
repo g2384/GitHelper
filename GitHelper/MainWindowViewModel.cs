@@ -4,8 +4,8 @@ using GitHelper.Extension;
 using GitHelper.UserControls;
 using NLog;
 using System;
-using System.Windows;
 using System.Windows.Input;
+using GitHelper.UIExtension;
 
 namespace GitHelper
 {
@@ -65,7 +65,7 @@ namespace GitHelper
                         throw new ArgumentOutOfRangeException();
                 }
 
-                RaisePropertyChanged("TabIndex");
+                RaisePropertyChanged(nameof(TabIndex));
             }
         }
 
@@ -94,7 +94,7 @@ namespace GitHelper
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Error", MessageBoxButton.OK);
+                MessageBox.ShowError(e.Message);
                 _log.Error(e, "Exception");
             }
         }
@@ -136,7 +136,7 @@ namespace GitHelper
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Error", MessageBoxButton.OK);
+                MessageBox.ShowError(e.Message);
                 _log.Error(e, "Exception");
             }
         }

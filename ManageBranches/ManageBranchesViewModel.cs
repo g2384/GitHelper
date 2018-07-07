@@ -9,7 +9,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows;
 using System.Windows.Input;
 
 namespace ManageBranches
@@ -188,8 +187,20 @@ namespace ManageBranches
             Branches = new List<BranchInfo>();
             if (!Directory.Exists(Config.RepoPath))
             {
-                MessageBox.Show($"Cannot find folder \"{Config.RepoPath}\"", "Error");
+                MessageBox.ShowError($"Cannot find folder \"{Config.RepoPath}\"");
                 return;
+            }
+
+            var cmd = "git config user.name";
+            var userInfo = RunCommand(Config.RepoPath, cmd).Split('\n');
+            var userName = "";
+            for (var i = 0; i < userInfo.Length; i++)
+            {
+                if (userInfo[i].Contains(cmd))
+                {
+                    userName = userInfo[i + 1];
+                    break;
+                }
             }
 
             using (var repo = new Repository(Config.RepoPath))
@@ -197,7 +208,7 @@ namespace ManageBranches
                 var developCommits = repo.Branches.FirstOrDefault(b => b.FriendlyName == Config.MergedInBranch)?.Commits;
                 if (developCommits == null)
                 {
-                    MessageBox.Show($"Cannot find branch \"{Config.MergedInBranch}\" in the repo", "Error", MessageBoxButton.OK);
+                    MessageBox.ShowError($"Cannot find branch \"{Config.MergedInBranch}\" in the repo");
                 }
 
                 var remoteBranches = repo.Branches.Where(b => b.IsRemote).ToList();
@@ -220,7 +231,9 @@ namespace ManageBranches
                             isLocal = false;
                         }
                     }
-                    Branches.Add(new BranchInfo(branch.FriendlyName, branch.IsTracking, isLocal, branch.Commits.First(), mergedInCommit));
+                    var branchInfo = new BranchInfo(branch.FriendlyName, branch.IsTracking, isLocal, branch.Commits.First(), mergedInCommit);
+                    branchInfo.LastCommitBy = branchInfo.LastCommitBy == userName ? "(You)" : branchInfo.LastCommitBy;
+                    Branches.Add(branchInfo);
                 }
             }
             Branches = Branches.OrderBy(b => b.Name).ToList();
@@ -239,7 +252,7 @@ namespace ManageBranches
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Error", MessageBoxButton.OK);
+                MessageBox.ShowError(e.Message);
                 _log.Error(e, "Exception");
             }
         }

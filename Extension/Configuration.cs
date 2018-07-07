@@ -64,7 +64,7 @@ namespace GitHelper.Extension
 
                     return configuration;
                 }
-                catch (Exception e)
+                catch (Exception)
                 { }
             }
 

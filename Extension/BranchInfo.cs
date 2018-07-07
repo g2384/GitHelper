@@ -11,6 +11,8 @@ namespace GitHelper.Extension
         public string IsLocal { get; set; }
         public string IsGone { get; set; }
         public string LastCommit { get; set; }
+        public string LastCommitBy { get; set; }
+        public string LastCommitByFullName { get; set; }
         public string LastCommitDate { get; set; }
         public string MergedInDate { get; set; }
         public string MergedInDateTime { get; set; }
@@ -24,6 +26,7 @@ namespace GitHelper.Extension
             IsLocal = isLocal ? CheckMark : "";
             LastCommit = lastCommit.Message.Trim();
             LastCommit = new Regex(@"[\r\n]+").Replace(LastCommit, "\n");
+            LastCommitByFullName = LastCommitBy = lastCommit.Author.Name;
             LastCommitDate = GetDateDifference(lastCommit.Author.When);
             LastCommitDateTime = lastCommit.Author.When.ToString("dddd, dd MMM yyyy HH:mm:ss");
             if (mergedInDate != null)
@@ -55,11 +58,8 @@ namespace GitHelper.Extension
             {
                 return Math.Round(diff.TotalHours, 1) + " hrs ago";
             }
-
-            //if (diff.TotalDays < 30)
-            {
-                return Math.Round(diff.TotalDays) + " days ago";
-            }
+            
+            return Math.Round(diff.TotalDays) + " days ago";
         }
     }
 }

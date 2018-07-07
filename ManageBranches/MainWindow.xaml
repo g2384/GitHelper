@@ -104,6 +104,16 @@
                     </GridViewColumn>
                     <GridViewColumn Width="150">
                         <GridViewColumn.Header>
+                            <TextBlock Text="Last Commit By" FontWeight="Normal"/>
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding LastCommitBy}" Width="130" TextAlignment="Center" ToolTip="{Binding LastCommitByFullName, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="150">
+                        <GridViewColumn.Header>
                             <TextBlock Text="Merged In Time" HorizontalAlignment="Center" FontWeight="Normal"/>
                         </GridViewColumn.Header>
                         <GridViewColumn.CellTemplate>

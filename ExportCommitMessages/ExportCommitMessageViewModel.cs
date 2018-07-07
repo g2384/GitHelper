@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows;
 using System.Windows.Input;
 
 namespace ExportCommitMessages
@@ -175,7 +174,7 @@ namespace ExportCommitMessages
                 var selectedBranch = repo.Branches.FirstOrDefault(b => b.FriendlyName == branchName);
                 if (selectedBranch == null)
                 {
-                    MessageBox.Show($"Cannot find branch \"{branchName}\"", "Error");
+                    MessageBox.ShowError($"Cannot find branch \"{branchName}\"");
                     return;
                 }
 
