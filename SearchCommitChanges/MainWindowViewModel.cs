@@ -5,6 +5,7 @@ using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using LibGit2Sharp;
+using SearchCommitChanges;
 
 namespace DeepBlameLine
 {

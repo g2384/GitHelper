@@ -4,6 +4,7 @@ using GitHelper.Extension.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
+using GitHelper.Helpers;
 
 namespace GitHelper
 {

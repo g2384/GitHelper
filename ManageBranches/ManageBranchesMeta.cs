@@ -10,7 +10,7 @@ namespace ManageBranches
     {
         public override string Name => "Manage Branches";
 
-        public override string Description => "Show which branch has been merged into a specific branch";
+        public override string Description => "Show which branch has been merged into a specified branch";
 
         public override IList<ExtensionFeatures> Features => new List<ExtensionFeatures>()
         {

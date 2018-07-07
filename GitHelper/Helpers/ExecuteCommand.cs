@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 
 namespace GitHelper.Helpers
 {
     public class ExecuteCommand
     {
         public ExecuteCommand()
-        {
-
-        }
+        { }
 
         public void Execute(string workingDirectory, string command)
         {

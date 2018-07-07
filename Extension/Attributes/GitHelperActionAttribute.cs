@@ -3,8 +3,5 @@
 namespace GitHelper.Extension.Attributes
 {
     public class GitHelperActionAttribute : Attribute
-    {
-        public GitHelperActionAttribute()
-        { }
-    }
+    { }
 }

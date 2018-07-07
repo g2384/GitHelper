@@ -115,7 +115,7 @@ namespace ExportCommitMessages
                 selectedIndex = BranchNames.IndexOf(SelectedBranchName);
             }
 
-            BranchNames = GetBranches(RepoPath)?.Select(e => e.Name)?.ToList();
+            BranchNames = GetBranches(RepoPath)?.Select(e => e.Name).ToList();
             if (GitHelper.Extension.Utility.IsNullOrEmpty(BranchNames))
             {
                 return;

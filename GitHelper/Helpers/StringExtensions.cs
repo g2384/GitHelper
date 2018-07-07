@@ -1,4 +1,4 @@
-﻿namespace GitHelper
+﻿namespace GitHelper.Helpers
 {
     public static class StringExtensions
     {

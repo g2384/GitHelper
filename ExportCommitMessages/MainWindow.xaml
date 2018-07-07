@@ -45,7 +45,7 @@
                  AcceptsReturn="False" TextWrapping="Wrap"
                  BorderBrush="#ccc"
                  Text="{Binding RepoPath, UpdateSourceTrigger=PropertyChanged}"/>
-            <Button Name="StartButton" Grid.Column="2" Margin="5,5,0,5" 
+            <Button Name="StartButton" Grid.Column="1" Margin="5,5,0,5" 
                     Width="50" Content="Load"
                     Style="{StaticResource MetroButton}"
                     Command="{Binding LoadBranchCommand}"/>

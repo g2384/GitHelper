@@ -110,7 +110,7 @@ namespace ManageBranches
                 return;
             }
 
-            var output = RunCommand(Config.RepoPath, "git branch -D " + SelectedBranch.Name);
+            RunCommand(Config.RepoPath, "git branch -D " + SelectedBranch.Name);
             LoadBranches();
         }
 

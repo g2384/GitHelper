@@ -49,7 +49,7 @@ namespace GitHelper.Extension
             {
                 try
                 {
-                    var se = new JsonSerializerSettings()
+                    var se = new JsonSerializerSettings
                     {
                         TypeNameHandling = TypeNameHandling.Auto,
                     };
@@ -65,7 +65,9 @@ namespace GitHelper.Extension
                     return configuration;
                 }
                 catch (Exception)
-                { }
+                {
+                    // ignored
+                }
             }
 
             return new Configuration();

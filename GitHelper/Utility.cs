@@ -21,20 +21,22 @@ namespace GitHelper
 
         public static string GetResourceText(string uriLink, Encoding encoding = null)
         {
-            var text = "";
             var uri = new Uri(uriLink);
-            var stream = Application.GetResourceStream(uri);
             if (encoding == null)
             {
                 encoding = Encoding.GetEncoding("UTF-8");
             }
 
-            using (var reader = new StreamReader(stream.Stream, encoding))
+            var stream = Application.GetResourceStream(uri);
+            if (stream == null)
             {
-                text = reader.ReadToEnd();
+                return "";
             }
 
-            return text;
+            using (var reader = new StreamReader(stream.Stream, encoding))
+            {
+                return reader.ReadToEnd();
+            }
         }
     }
 }

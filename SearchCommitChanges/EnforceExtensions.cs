@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using JetBrains.Annotations;
 
-namespace DeepBlameLine
+namespace SearchCommitChanges
 {
     public static class EnforceExtensions
     {

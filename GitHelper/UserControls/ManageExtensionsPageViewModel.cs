@@ -83,7 +83,7 @@ namespace GitHelper.UserControls
                 _useRelativePath = value;
 
                 SetSelectedPath();
-                RaisePropertyChanged("UseRelativePath");
+                RaisePropertyChanged(nameof(UseRelativePath));
             }
         }
 
