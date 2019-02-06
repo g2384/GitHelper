@@ -2,6 +2,6 @@
 
 namespace GitHelper.Extension.Attributes
 {
-    public class GitHelperActionAttribute : Attribute
+    public sealed class GitHelperActionAttribute : Attribute
     { }
 }

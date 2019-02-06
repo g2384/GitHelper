@@ -20,7 +20,7 @@ namespace ManageBranches
         public List<BranchInfo> Branches { get; set; }
         public GitHelper.Extension.Configuration Config { get; set; }
 
-        private static Logger _log = LogManager.GetCurrentClassLogger();
+        private static readonly Logger _log = LogManager.GetCurrentClassLogger();
 
         public ICommand DeleteBranchCommand { get; }
         public ICommand LoadBranchCommand { get; }

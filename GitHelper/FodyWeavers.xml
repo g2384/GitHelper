@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Weavers>
-  <Costura 
-    ExcludeAssemblies="GitHelper.UIExtension|GitHelper.Extension"/>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Weavers GenerateXsd="false">
+  <Costura ExcludeAssemblies="GitHelper.UIExtension|GitHelper.Extension" />
 </Weavers>

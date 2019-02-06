@@ -2,7 +2,9 @@
 using GitHelper.Extension.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Windows;
+using GitHelper.Extension.Attributes;
 
 namespace GitHelper.UIExtension
 {
@@ -18,10 +20,12 @@ namespace GitHelper.UIExtension
 
         public void ShowDialog(Configuration configuration)
         {
-            var dialog = new TWindow()
-            {
-                DataContext = Activator.CreateInstance(typeof(TViewModel), configuration)
-            };
+            var requireConfig = typeof(TWindow).GetCustomAttribute(typeof(RequireConfigAttribute), true) as RequireConfigAttribute;
+            var dialog = new TWindow();
+            if (requireConfig?.RequireConfig != false) {
+                dialog.DataContext = Activator.CreateInstance(typeof(TViewModel), configuration);
+            }
+
             Utility.ShowDialog(dialog);
         }
     }
