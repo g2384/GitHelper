@@ -19,7 +19,7 @@ namespace GitHelper
 
         public string Description { get; set; }
 
-        public IList<ExtensionFeatures> Features { get; set; }
+        public IList<ExtensionFeature> Features { get; set; }
 
         public ICommand ExecuteCommand { get; }
 
@@ -28,11 +28,11 @@ namespace GitHelper
         private readonly IGitHelperActionMeta _actionMeta;
         private readonly Configuration _config;
 
-        public bool IsPlugin => Features.Contains(ExtensionFeatures.IsAssembly);
+        public bool IsPlugin => Features.Contains(ExtensionFeature.IsAssembly);
 
-        public bool IsScript => Features.Contains(ExtensionFeatures.IsScript);
+        public bool IsScript => Features.Contains(ExtensionFeature.IsScript);
 
-        public bool HasNewWindow => Features.Contains(ExtensionFeatures.HasNewWindow);
+        public bool HasNewWindow => Features.Contains(ExtensionFeature.HasNewWindow);
 
         private readonly string _filePath;
 
@@ -85,12 +85,12 @@ namespace GitHelper
                 {
                     switch (f)
                     {
-                        case ExtensionFeatures.HasNewWindow:
+                        case ExtensionFeature.HasNewWindow:
                             features.Add(OpensANewWindow);
                             break;
-                        case ExtensionFeatures.IsScript:
+                        case ExtensionFeature.IsScript:
                             break;
-                        case ExtensionFeatures.IsAssembly:
+                        case ExtensionFeature.IsAssembly:
                             break;
                     }
                 }

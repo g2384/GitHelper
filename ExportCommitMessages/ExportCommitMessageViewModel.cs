@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
+using GitHelper.Common.Extensions;
 
 namespace ExportCommitMessages
 {
@@ -110,13 +111,13 @@ namespace ExportCommitMessages
         private void LoadBranches()
         {
             var selectedIndex = 0;
-            if (!GitHelper.Extension.Utility.IsNullOrEmpty(BranchNames))
+            if (!BranchNames.IsNullOrEmpty())
             {
                 selectedIndex = BranchNames.IndexOf(SelectedBranchName);
             }
 
             BranchNames = GetBranches(RepoPath)?.Select(e => e.Name).ToList();
-            if (GitHelper.Extension.Utility.IsNullOrEmpty(BranchNames))
+            if (BranchNames.IsNullOrEmpty())
             {
                 return;
             }
@@ -157,7 +158,7 @@ namespace ExportCommitMessages
 
         private void Export(string branchName, List<CommitExportFormat> formats, DateTime? startDate, DateTime? endDate)
         {
-            if (GitHelper.Extension.Utility.IsNullOrEmpty(formats))
+            if (formats.IsNullOrEmpty())
             {
                 MessageBox.Show("please specify a valid format.");
                 return;

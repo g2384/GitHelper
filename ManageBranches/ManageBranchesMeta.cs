@@ -12,9 +12,9 @@ namespace ManageBranches
 
         public override string Description => "Show which branch has been merged into a specified branch";
 
-        public override IList<ExtensionFeatures> Features => new List<ExtensionFeatures>()
+        public override IList<ExtensionFeature> Features => new List<ExtensionFeature>()
         {
-            ExtensionFeatures.HasNewWindow, ExtensionFeatures.IsAssembly
+            ExtensionFeature.HasNewWindow, ExtensionFeature.IsAssembly
         };
     }
 }

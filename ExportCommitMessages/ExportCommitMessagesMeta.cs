@@ -12,9 +12,9 @@ namespace ExportCommitMessages
 
         public override string Description => "Export commit messages in a specified format";
 
-        public override IList<ExtensionFeatures> Features => new List<ExtensionFeatures>()
+        public override IList<ExtensionFeature> Features => new List<ExtensionFeature>()
         {
-            ExtensionFeatures.HasNewWindow, ExtensionFeatures.IsAssembly
+            ExtensionFeature.HasNewWindow, ExtensionFeature.IsAssembly
         };
     }
 }

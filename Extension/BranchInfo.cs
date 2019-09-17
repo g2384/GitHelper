@@ -1,5 +1,6 @@
 using System;
 using System.Text.RegularExpressions;
+using GitHelper.Common.Extensions;
 using LibGit2Sharp;
 
 namespace GitHelper.Extension
@@ -44,22 +45,7 @@ namespace GitHelper.Extension
         public static string GetDateDifference(DateTimeOffset time)
         {
             var diff = DateTime.Now - time;
-            if (diff.TotalSeconds < 60)
-            {
-                return Math.Round(diff.TotalSeconds) + " secs ago";
-            }
-
-            if (diff.TotalMinutes < 60)
-            {
-                return Math.Round(diff.TotalMinutes, 1) + " mins ago";
-            }
-
-            if (diff.TotalHours < 24)
-            {
-                return Math.Round(diff.TotalHours, 1) + " hrs ago";
-            }
-            
-            return Math.Round(diff.TotalDays) + " days ago";
+            return diff.ToWords();
         }
     }
 }

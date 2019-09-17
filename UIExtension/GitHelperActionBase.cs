@@ -16,7 +16,7 @@ namespace GitHelper.UIExtension
                
         public abstract string Description { get; }
 
-        public abstract IList<ExtensionFeatures> Features { get; }
+        public abstract IList<ExtensionFeature> Features { get; }
 
         public void ShowDialog(Configuration configuration)
         {

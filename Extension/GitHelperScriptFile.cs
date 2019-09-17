@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using GitHelper.Common.Extensions;
 using GitHelper.Extension.Helpers;
 using GitHelper.Extension.Interfaces;
 using Newtonsoft.Json;
@@ -16,7 +17,7 @@ namespace GitHelper.Extension
         [JsonIgnore]
         public string ShortDescription { get; private set; }
 
-        public IList<ExtensionFeatures> Features { get; private set; }
+        public IList<ExtensionFeature> Features { get; private set; }
 
         public string WorkingDirectory { get; }
 
@@ -68,12 +69,12 @@ namespace GitHelper.Extension
 
             if (Features == null)
             {
-                Features = new List<ExtensionFeatures>();
+                Features = new List<ExtensionFeature>();
             }
 
-            if (!Features.Contains(ExtensionFeatures.IsScript))
+            if (!Features.Contains(ExtensionFeature.IsScript))
             {
-                Features.Add(ExtensionFeatures.IsScript);
+                Features.Add(ExtensionFeature.IsScript);
             }
         }
 
@@ -115,7 +116,7 @@ namespace GitHelper.Extension
                 errors.Add("name is empty");
             }
 
-            return Utility.IsNullOrEmpty(errors);
+            return errors.IsNullOrEmpty();
         }
 
         public IGitHelperExtensionFile ConvertTo(Newtonsoft.Json.Linq.JObject obj)
