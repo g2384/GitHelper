@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Command;
+using GitHelper.Common;
 using GitHelper.Extension;
 using GitHelper.UIExtension;
 using LibGit2Sharp;
@@ -105,18 +106,18 @@ namespace ManageBranches
 
         private void DeleteBranchMethod()
         {
-            if(SelectedBranch == null)
+            if (SelectedBranch == null)
             {
                 return;
             }
 
-            RunCommand(Config.RepoPath, "git branch -D " + SelectedBranch.Name);
+            CommandLineRunner.Run(Config.RepoPath, "git branch -D " + SelectedBranch.Name);
             LoadBranches();
         }
 
         private void GetBranchInfoFromGitCommand(List<BranchInfo> branches)
         {
-            var output = RunCommand(Config.RepoPath, GitBranchvv);
+            var output = CommandLineRunner.Run(Config.RepoPath, GitBranchvv);
             var lines = output.Split('\n').ToList();
             var startIndex = lines.FindIndex(l => l.Contains(GitBranchvv));
             if (startIndex >= 0)
@@ -158,30 +159,6 @@ namespace ManageBranches
             }
         }
 
-        private static string RunCommand(string repoPath, string cmd)
-        {
-            var p = new Process
-            {
-                StartInfo =
-                {
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardInput = true,
-                    CreateNoWindow = true,
-                    FileName = "cmd.exe"
-                }
-            };
-            p.Start();
-            var drive = repoPath.Split(':').First();
-            p.StandardInput.WriteLine($"{drive}:");
-            p.StandardInput.WriteLine($"cd \"{repoPath}\"");
-            p.StandardInput.WriteLine(cmd);
-            p.StandardInput.Close();
-            var output = p.StandardOutput.ReadToEnd();
-            p.Close();
-            return output;
-        }
-
         private void GetBranches()
         {
             Branches = new List<BranchInfo>();
@@ -192,7 +169,7 @@ namespace ManageBranches
             }
 
             var cmd = "git config user.name";
-            var userInfo = RunCommand(Config.RepoPath, cmd).Split('\n');
+            var userInfo = CommandLineRunner.Run(Config.RepoPath, cmd).Split('\n');
             var userName = "";
             for (var i = 0; i < userInfo.Length; i++)
             {

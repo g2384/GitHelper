@@ -15,7 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIExtension", "UIExtension\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchCommitChanges", "SearchCommitChanges\SearchCommitChanges.csproj", "{559B4D2B-DD7C-41C8-8C0F-D3E22556DC6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "GitHelper.Common\Common.csproj", "{F88ECE7F-78E3-4F2C-A8CB-66CFB1E53CE7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "GitHelper.Common\Common.csproj", "{F88ECE7F-78E3-4F2C-A8CB-66CFB1E53CE7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MergeBranch", "MergeBranch\MergeBranch.csproj", "{94CCE6DE-237D-43A2-9363-D155F8DF9BC9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +83,14 @@ Global
 		{F88ECE7F-78E3-4F2C-A8CB-66CFB1E53CE7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F88ECE7F-78E3-4F2C-A8CB-66CFB1E53CE7}.Release|x86.ActiveCfg = Release|Any CPU
 		{F88ECE7F-78E3-4F2C-A8CB-66CFB1E53CE7}.Release|x86.Build.0 = Release|Any CPU
+		{94CCE6DE-237D-43A2-9363-D155F8DF9BC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94CCE6DE-237D-43A2-9363-D155F8DF9BC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94CCE6DE-237D-43A2-9363-D155F8DF9BC9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{94CCE6DE-237D-43A2-9363-D155F8DF9BC9}.Debug|x86.Build.0 = Debug|Any CPU
+		{94CCE6DE-237D-43A2-9363-D155F8DF9BC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94CCE6DE-237D-43A2-9363-D155F8DF9BC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94CCE6DE-237D-43A2-9363-D155F8DF9BC9}.Release|x86.ActiveCfg = Release|Any CPU
+		{94CCE6DE-237D-43A2-9363-D155F8DF9BC9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

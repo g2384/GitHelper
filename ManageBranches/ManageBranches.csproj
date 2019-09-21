@@ -165,6 +165,10 @@
       <Project>{139D3F9E-968F-42B4-A889-B50A4538D469}</Project>
       <Name>Extension</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GitHelper.Common\Common.csproj">
+      <Project>{F88ECE7F-78E3-4F2C-A8CB-66CFB1E53CE7}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UIExtension\UIExtension.csproj">
       <Project>{5BC4B47D-222D-4772-B1F0-2DC8484C0F5D}</Project>
       <Name>UIExtension</Name>
