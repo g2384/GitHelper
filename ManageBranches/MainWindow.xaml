@@ -57,12 +57,12 @@
         </Grid>
         <ListView Grid.Row="3" Name="BranchListView" Margin="0, 5" 
                   IsSynchronizedWithCurrentItem="True"
-                  ItemsSource="{Binding Branches}"
+                  ItemsSource="{Binding BranchViewModels}"
                   SelectedItem="{Binding SelectedBranch, UpdateSourceTrigger=PropertyChanged}"
                     local:GridViewSort.AutoSort="True">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Name}" >
+                    <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding BranchInfo.Name}" >
                         <GridViewColumn.Header>
                             <TextBlock Text="Name" Padding="5,0" FontWeight="Normal"/>
                         </GridViewColumn.Header>
@@ -73,7 +73,7 @@
                         </GridViewColumn.Header>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding IsLocal}" Width="50" TextAlignment="Center" />
+                                <TextBlock Text="{Binding BranchInfo.IsLocal}" Width="50" TextAlignment="Center" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -83,7 +83,7 @@
                         </GridViewColumn.Header>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding IsGone}" Width="50" TextAlignment="Center" />
+                                <TextBlock Text="{Binding BranchInfo.IsGone}" Width="50" TextAlignment="Center" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -98,7 +98,7 @@
                         </GridViewColumn.Header>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding LastCommitDate}" Width="130" TextAlignment="Right" ToolTip="{Binding LastCommitDateTime, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBlock Text="{Binding BranchInfo.LastCommitDate}" Width="130" TextAlignment="Right" ToolTip="{Binding LastCommitDateTime, UpdateSourceTrigger=PropertyChanged}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -108,7 +108,7 @@
                         </GridViewColumn.Header>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding LastCommitBy}" Width="130" TextAlignment="Center" ToolTip="{Binding LastCommitByFullName, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBlock Text="{Binding BranchInfo.LastCommitBy}" Width="130" TextAlignment="Center" ToolTip="{Binding LastCommitByFullName, UpdateSourceTrigger=PropertyChanged}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -118,12 +118,17 @@
                         </GridViewColumn.Header>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding MergedInDate}" Width="130" TextAlignment="Right" ToolTip="{Binding MergedInDateTime, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBlock Text="{Binding BranchInfo.MergedInDate}" Width="130" TextAlignment="Right" ToolTip="{Binding MergedInDateTime, UpdateSourceTrigger=PropertyChanged}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                 </GridView>
             </ListView.View>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="IsSelected" Value="{Binding Mode=TwoWay, Path=IsSelected}"/>
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
         <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,5,0,0" HorizontalAlignment="Right">
             <CheckBox Name="OnlyDeleteMergedCheckBox" Margin="5,0,10,0" VerticalAlignment="Center" 

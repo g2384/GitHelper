@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿using Caliburn.Micro;
+using GalaSoft.MvvmLight.Command;
 using GitHelper.Common;
 using GitHelper.Extension;
 using GitHelper.UIExtension;
@@ -6,19 +7,37 @@ using LibGit2Sharp;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
+using LogManager = NLog.LogManager;
 
 namespace ManageBranches
 {
+    public class BranchInfoViewModel : ActionViewModelBase
+    {
+        private BranchInfo _branchInfo;
+        public BranchInfo BranchInfo { get => _branchInfo; set => Set(ref _branchInfo, value); }
+
+        private bool isSelected;
+
+        public bool IsSelected
+        {
+            get => isSelected;
+            set => Set(ref isSelected, value);
+        }
+    }
+
     public class ManageBranchesViewModel : ActionViewModelBase
     {
         private const string GitBranchvv = "git branch -vv";
 
         public List<BranchInfo> Branches { get; set; }
+
+        public List<BranchInfoViewModel> BranchViewModels { get; set; }
+
         public GitHelper.Extension.Configuration Config { get; set; }
 
         private static readonly Logger _log = LogManager.GetCurrentClassLogger();
@@ -64,7 +83,7 @@ namespace ManageBranches
 
         private bool GetIsDeleteEnabled()
         {
-            return !Config.OnlyDeleteMerged || !string.IsNullOrWhiteSpace(SelectedBranch?.IsLocal);
+            return !Config.OnlyDeleteMerged || SelectedBranch?.All(e => !string.IsNullOrWhiteSpace(e.BranchInfo.IsLocal)) == true;
         }
 
         private bool _isDeleteEnabled;
@@ -74,8 +93,8 @@ namespace ManageBranches
             set => Set(ref _isDeleteEnabled, value);
         }
 
-        private BranchInfo _selectedBranch;
-        public BranchInfo SelectedBranch
+        private ObservableCollection<BranchInfoViewModel> _selectedBranch;
+        public ObservableCollection<BranchInfoViewModel> SelectedBranch
         {
             get => _selectedBranch;
             set
@@ -111,7 +130,11 @@ namespace ManageBranches
                 return;
             }
 
-            CommandLineRunner.Run(Config.RepoPath, "git branch -D " + SelectedBranch.Name);
+            foreach (var branch in SelectedBranch)
+            {
+                CommandLineRunner.Run(Config.RepoPath, "git branch -D " + branch.BranchInfo.Name);
+            }
+
             LoadBranches();
         }
 
@@ -214,6 +237,7 @@ namespace ManageBranches
                 }
             }
             Branches = Branches.OrderBy(b => b.Name).ToList();
+            BranchViewModels = Branches.Select(e => new BranchInfoViewModel() {BranchInfo = e}).ToList();
         }
 
         private void LoadBranches()
